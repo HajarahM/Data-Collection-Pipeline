@@ -12,7 +12,7 @@ class Scraper:
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(options=self.options)
         self.website = 'https://www.wegotravel.co.uk'        
-        # self.accept_cookies_id = "CybotCookiebotDialogBodyLevelButtonAccept" or "CybotCookiebotDialogBodyLevelButtonAcceptWrapper"
+        self.accept_cookies_id = "CybotCookiebotDialogBodyLevelButtonAcceptWrapper"
     
     def webpage(self):
         self.driver.get(self.website)
@@ -24,7 +24,7 @@ class Scraper:
             self.driver.switch_to.frame('fc_frame') # This is the id of the frame - not yet accurate
             accept_preferences_button = self.driver.find_element(by=By.XPATH, value='//*[@id="CybotCookiebotDialogBodyLevelButtonPreferences"]')            
             accept_preferences_button.click()
-            accept_cookies_button = self.driver.find_element(by=By.XPATH, value='//*[@id=self.accept_cookies_id]')
+            accept_cookies_button = self.driver.find_element(by=By.XPATH, value='//*[@id=f"{self.accept_cookies_id}"]')
             accept_cookies_button.click()
 
         except:
@@ -43,7 +43,7 @@ class Scraper:
             pass # If there is no cookies button, we won't find it, so we can pass
 
     def close_webpage(self): 
-        time.sleep(10)
+        time.sleep(100)
         self.driver.close()
 
     
@@ -51,9 +51,9 @@ class Scraper:
 
 def navigate():
     test = Scraper()
-    test.webpage
-    # test.bypass_cookies
-    # test.bypass_subscription
+    test.webpage()
+    test.bypass_cookies()
+    # test.bypass_subscription()
     # test.scroll_down()
     test.close_webpage()
 

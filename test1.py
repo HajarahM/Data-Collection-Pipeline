@@ -23,8 +23,8 @@ class Scraper:
 
 def navigate():
     test = Scraper()
-    test.launch_webpage
-    test.close_webpage
+    test.launch_webpage()
+    test.close_webpage()
 
 
 if __name__ == "__main__":
