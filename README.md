@@ -6,6 +6,9 @@ The virtual environment created for this project is named DCP with the following
 ## Scraper Project using Selenium
 The scraper project is Project 2 or the aiCore bootcamp training with an aim to harness skills in data mining by fetching different types of data from websites, importing it into tables/dictionaries to serve data analytical purposes.
 
+### Selected website for Project
+The website I selected for this project is ikea.com specially due to the variety of it's list of products and simplicity.
+
 ## Modules Used
 Imported modules include selenium, weddriver, Chrome, and time.
 
