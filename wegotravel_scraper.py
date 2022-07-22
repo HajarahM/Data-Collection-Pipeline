@@ -43,7 +43,7 @@ class Scraper:
             pass # If there is no cookies button, we won't find it, so we can pass
 
     def close_webpage(self): 
-        time.sleep(100)
+        time.sleep(10)
         self.driver.close()
 
     

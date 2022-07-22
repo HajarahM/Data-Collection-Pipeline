@@ -1,31 +1,34 @@
 import selenium
 from selenium import webdriver
 from selenium.webdriver import Chrome
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-import time
 
-class Scraper: 
-    def __init__(self):        
-        self.options = webdriver.ChromeOptions()
-        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.driver = webdriver.Chrome(options=self.options)
-    
-    def launch_webpage(self):
-        self.driver.get('https://www.ikea.com/')
-        
+options = webdriver.ChromeOptions()
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+driver = webdriver.Chrome(options=options)
 
-    def close_webpage(self): 
-        time.sleep(10)
-        self.driver.close()
- 
+#opening homepage 
+driver.get('https://www.ikea.com')
 
+#opening window in maximize mode
+driver.maximize_window()
 
-def navigate():
-    test = Scraper()
-    test.launch_webpage()
-    test.close_webpage()
+#accept_cookies
+accept_cookies_button = driver.find_element(by=By.XPATH, value='//*[@id="onetrust-accept-btn-handler"]')
+accept_cookies_button.click()
 
+#list of links to sofas
+driver.get('https://www.ikea.com/gb/en/cat/sofas-fu003/')
+accept_cookies_button = driver.find_element(by=By.XPATH, value='//*[@id="onetrust-accept-btn-handler"]')
+accept_cookies_button.click()
+sofas_list = driver.find_elements(by=By.XPATH, value='//a[starts-with(@href,"https://www.ikea.com/gb/en/cat/sofas-fu003/")]')
+links = []
+for item in sofas_list:
+    links.append(item.find_element(by=By.XPATH, value='.//a[starts-with(@href,"https://www.ikea.com/gb/en/cat/sofas-fu003/")]').get_attribute('href'))
+    # links.append(item.find_element(by=By.XPATH, value='.//a[starts-with(@href,"https://www.ikea.com/gb/en/cat/sofas-fu003/?page=")]').get_attribute('href'))
+print(links)
 
-if __name__ == "__main__":
-    navigate()
+#close window
+driver.close()
+
+#data.json file for dictionary
