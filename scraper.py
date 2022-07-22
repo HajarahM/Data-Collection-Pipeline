@@ -2,7 +2,7 @@ import selenium
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from time import sleep
+import time
 
 class Scraper:
     def __init__(self, homepage, acceptcookiesid, productname, producttypeurl, productid):
@@ -14,6 +14,7 @@ class Scraper:
         self.productname = productname
         self.producttypeurl = producttypeurl
         self.productid = productid
+        self.links = []
 
     def launch_homepage(self):
         self.driver.get(self.homepage)
@@ -24,19 +25,35 @@ class Scraper:
     def accept_cookies(self):
         accept_cookies_button = self.driver.find_element(by=By.XPATH, value=self.acceptcookiesid)
         accept_cookies_button.click() 
-
-    def fetch_product_links(self):
+    
+    def extract_links(self):
         self.driver.get(self.producttypeurl)
         self.accept_cookies()
-        sleep(20)
+        print("Loading all images...")
+        time.sleep(20)
         print("Fetching links...")
-        links = []
+        self.links = []
         product_list = self.driver.find_elements(by=By.XPATH, value=self.productid)
         for item in product_list:
-            links.append(item.find_element(by=By.XPATH, value='.//a').get_attribute('href'))
-        # print(len(links)) 
-        print(f'{len(links)} product links stored in {self.productname} list')
-        # print(links)
+            self.links.append(item.find_element(by=By.XPATH, value='.//a').get_attribute('href'))
+        # print(len(self.links)) 
+        print(f'{len(self.links)} product links stored in {self.productname} list')
+        # print(self.links)
+
+    def get_image_source(self, link: str):
+        self.driver.get(link)
+        time.sleep(0.5)
+        self.src = self.driver.find_element(by=By.XPATH, value='//img[@class="pip-aspect-ratio-image__image"]').get_attribute('src')
+
+    def download_images(self, i):
+        self.urllib.request.urlretrieve(self.src, f"./product/{self.productname}_{i}.jpg")
+
+    def get_product_images(self):
+        all_links = self.extract_links()
+        for i, link in enumerate(all_links):
+            self.get_image_source(link)
+            self.download_images(i)
+        self.links = []
 
     def close_window(self):
         self.driver.close()
@@ -55,7 +72,7 @@ def fetch():
     bot.launch_homepage()
     bot.max_window()
     bot.accept_cookies()
-    bot.fetch_product_links()
+    bot.extract_links()
     bot.close_window()
     
 if __name__ == "__main__":
