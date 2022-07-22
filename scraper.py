@@ -1,4 +1,3 @@
-from itertools import product
 import selenium
 from selenium import webdriver
 from selenium.webdriver import Chrome
