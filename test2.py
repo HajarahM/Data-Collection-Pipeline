@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 import time
+import urllib
+import requests
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -23,6 +25,7 @@ accept_cookies_button.click()
 driver.get("https://www.ikea.com/gb/en/cat/sofa-beds-20874/?page=9")
 accept_cookies_button = driver.find_element(by=By.XPATH, value='//*[@id="onetrust-accept-btn-handler"]')
 accept_cookies_button.click()
+print("Loading ...")
 sleep(10)
 driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
 print("Finding elements...")
@@ -51,10 +54,11 @@ pdtdescription = driver.find_element(by=By.XPATH, value='//span[@class="pip-head
 pdtmeasurement = driver.find_element(by=By.XPATH, value='//button[@class="pip-link-button pip-header-section__description-measurement"]').text
 print(f"{brand}, {pdtdescription}, {pdtmeasurement}")
 pdtprice = driver.find_element(by=By.XPATH, value='//span[@class="pip-price__integer"]').text
-# currency = driver.find_element(by=By.XPATH, value='//span[@class="pip-price__currency-symbol pip-price__currency-symbol--leading \n\t pip-price__currency-symbol--superscript"]').text
+# currency = driver.find_element(by=By.XPATH, value='//span[@class="pip-price__currency-symbol pip-price__currency-symbol--leading \n\t  pip-price__currency-symbol--superscript"]').text
 print(f"{pdtprice}")
 
-
+image_src = driver.find_element(by=By.XPATH, value='//img[@class="pip-aspect-ratio-image__image"]').get_attribute('src')
+urllib.request.urlretrieve(image_src, "./images/products/test.jpg")
 
 #close window
 driver.close()

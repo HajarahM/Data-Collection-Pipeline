@@ -4,6 +4,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 import time
 import urllib
+import requests
 
 
 class Scraper:
