@@ -60,5 +60,14 @@ retrieved_image = requests.get(image_src).content
 with open('./images/sofa-bed.jpg', 'wb') as outimage:
     outimage.write(retrieved_image)
 
+# def create_pdtfolder(self):   #get pdt number from website and create folder with pdt number
+#         # link = 'https://www.ikea.com/gb/en/p/hemnes-day-bed-w-3-drawers-2-mattresses-white-asvang-firm-s09428106/'    
+#         self.pdtidlist = []    
+#         for link in self.links:
+#             self.pdtrefid = link[link.rindex('-')+1:].strip('/')
+#             self.pdtidlist.append(self.pdtrefid)
+#             self.createFolder(f'./raw_data/{self.pdtrefid}/')
+#         # print(self.pdtidlist)   
+
 #close window
 driver.close()

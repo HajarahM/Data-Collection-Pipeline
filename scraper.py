@@ -6,10 +6,12 @@ import time
 import requests
 import uuid6
 import os
+import json
+
 
 
 class Scraper:
-    def __init__(self, homepage, acceptcookiesid, productname, producttypeurl, productid, productrefid):
+    def __init__(self, homepage, acceptcookiesid, productname, producttypeurl, productid):
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(options=self.options)
@@ -17,10 +19,9 @@ class Scraper:
         self.acceptcookiesid = acceptcookiesid
         self.productname = productname
         self.producttypeurl = producttypeurl
-        self.productid = productid
-        self.productrefid = productrefid
-        self.links = []    
-        self.dict_properties = {'link': [], 'ProductID': [], 'SysUID': [], 'Brand': [], 'Description': [], 'Price': [], 'Image': []}
+        self.productid = productid        
+        self.links = [[], []]
+        self.pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
 
     def createFolder(self, directory):
         try:
@@ -36,105 +37,98 @@ class Scraper:
         self.driver.maximize_window()
     
     def accept_cookies(self):
-        time.sleep(0.5)
-        accept_cookies_button = self.driver.find_element(by=By.XPATH, value=self.acceptcookiesid)
-        accept_cookies_button.click() 
+        try:
+            accept_cookies_button = self.driver.find_element(by=By.XPATH, value=self.acceptcookiesid)
+            accept_cookies_button.click() 
+        except:
+            pass # If there is no cookies button, we won't find it, so we can pass
 
     def scroll_down(self):
         self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-        time.sleep(1)
+        time.sleep(2)
     
     def get_links(self): # and website assigned product ID
         self.driver.get(self.producttypeurl)
         self.accept_cookies()
         print("Loading all images...")
-        time.sleep(10)
+        time.sleep(7)
         print("Fetching links...")
         self.links = []
-        self.product_list = self.driver.find_elements(by=By.XPATH, value=self.productid)
-        for item in self.product_list:
+        product_list = self.driver.find_elements(by=By.XPATH, value=self.productid)
+        for item in product_list:
             # get links
             a_tag = item.find_element(by=By.XPATH, value='.//a')
             self.link = a_tag.get_attribute('href')
-            self.links.append(self.link)            
-            # and get IDs
-            self.pdtrefid = item.find_element(by=By.XPATH, value=self.productrefid)
-            self.dict_properties['ProductID'].append(self.pdtrefid)    
-        # print(len(self.links)) 
-        print(f'{len(self.links)} product links stored in {self.productname} list')
-        return self.links
-
-    # def get_pdtnumber(self):
-    #     self.driver.get(self.producttypeurl)
-    #     time.sleep(3)
-    #     self.pdtrefid = self.driver.find_element(by=By.XPATH, value=self.productrefid)
-    #     return(self.pdtrefid)
-
-    def generate_UUID(self):
-        self.uuid = uuid6.uuid7().hex
-        return self.uuid
-
-    def get_text(self):
-        self.dict_properties.extend(self.get_links())
-        self.driver.get(self.link)
-        time.sleep(3)        
-        for self.link in self.dict_properties:            
-            #extract all text per product page
-            self.brand = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-header-section__title--big notranslate"]').text            
-            self.pdtdescription = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-header-section__description-text"]').text                 
-            self.pdtprice = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__integer"]').text 
-            # self.currency = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__currency-symbol pip-price__currency-symbol--leading \n\t pip-price__currency-symbol--superscript"]').text       
-        return self.brand, self.pdtdescription, self.pdtprice
-
-    def get_image_source(self):
-        self.driver.get(self.link)
-        time.sleep(0.5)
-        self.image_src = self.driver.find_element(by=By.XPATH, value='//img[@class="pip-aspect-ratio-image__image"]').get_attribute('src')
-        return self.image_src
+            self.links.append(self.link)                          
+        print(f'{len(self.links)} items stored in {self.productname} list')
+        # return (self.links) 
         
-    def download_images(self):   
-        self.get_image_source()     
-        self.retrieved_image = requests.get(self.image_src).content        
-        return self.retrieved_image
-
-    # #check if needed - need to revise######   
-    # def get_product_images(self, i):
-    #     self.all_links = self.get_links()
-    #     for i, link in enumerate(self.all_links):
-    #         self.get_image_source(link)
-    #         self.download_images(i)
-    #     self.links = []    
-
-    def store_data(self):
-                     
-        #call functions to get data from site
-        self.scroll_down()
-        self.get_links()
-        self.get_text(self.link)
-        self.get_image_source(self.link)
-        self.generate_UUID(self.link)
-
-        #store in dictionary
-        for self.link in self.dict_properties:
-            self.dict_properties['SysUID'].append(self.uuid)
-            self.dict_properties['Link'].append(self.link) 
-            self.dict_properties['Image'].append(self.retrieved_image) 
-            self.dict_properties['Brand'].append(self.brand) 
-            self.dict_properties['Description'].append(self.pdtdescription)  
-            self.dict_properties['Price'].append(self.pdtprice)     
-        
-    def save_locally(self):
-        self.download_images()
+    def create_mainfolder(self):
         #create raw_data folder and product folder
         self.createFolder('./raw_data/')
-        #create folder with the id of the product as it's name
-        self.createFolder(f'./raw_data/{self.pdtrefid}/')
-        for self.link in self.dict_properties:
-            with open(f'./raw_data/{self.pdtrefid}/data.json', 'wb') as outimage:
-                outimage.write(self.dict_properties)                        
-            self.createFolder(f'./raw_data/{self.pdtrefid}/images')
-            with open(f'./images/{self.pdtrefid}.jpg', 'wb') as outimage:
-                outimage.write(self.retrieved_image)
+        
+    def get_pdtrefid(self, link):
+        pdtrefid = link[link.rindex('-')+1:].strip('/')   
+        return pdtrefid
+
+    def create_pdtfolder(self, link):   #get pdt number from website and create folder with pdt number      
+        pdtrefid = self.get_pdtrefid(link)
+        self.createFolder(f'./raw_data/{pdtrefid}/')
+              
+    def generate_UUID(self):
+        uuid = uuid6.uuid7().hex
+        return uuid
+
+    def get_text(self, link):      
+        self.driver.get(link) 
+        time.sleep(0.5)          
+        #extract all text per product page
+        self.brand = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-header-section__title--big notranslate"]').text            
+        self.pdtdescription = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-header-section__description-text"]').text                 
+        self.pdtprice = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__integer"]').text 
+        # self.currency = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__currency-symbol pip-price__currency-symbol--leading \n\t pip-price__currency-symbol--superscript"]').text       
+        
+    def get_image_source(self, link):
+        self.driver.get(link)
+        time.sleep(0.5)
+        image_src = self.driver.find_element(by=By.XPATH, value='//img[@class="pip-aspect-ratio-image__image"]').get_attribute('src')
+        return image_src
+        
+    def download_image(self, link):   
+        image_link = self.get_image_source(link)     
+        retrieved_image = requests.get(image_link).content        
+        return retrieved_image
+
+    def update_pdt_dict(self, link):
+        uuid = self.generate_UUID()
+        image_link = self.get_image_source(link) 
+        pdtrefid = self.get_pdtrefid(link)
+        self.pdt_dict['SysUID'].append(uuid) 
+        self.pdt_dict['ProductID'].append(pdtrefid)             
+        self.pdt_dict['Imagelink'].append(image_link) 
+        self.pdt_dict['Brand'].append(self.brand) 
+        self.pdt_dict['Description'].append(self.pdtdescription)  
+        self.pdt_dict['Price'].append(self.pdtprice)                             
+        
+    def save_locally(self, link): 
+        #save image         
+        retrieved_image=self.download_image(link)  
+        pdtrefid = self.get_pdtrefid(link)
+        self.createFolder(f'./raw_data/{pdtrefid}/images') 
+        with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
+            outimage.write(retrieved_image)
+        #save data
+        #create and save into data.json file
+        with open(f'./raw_data/{pdtrefid}/data.json', 'w') as data:
+            json.dump(self.pdt_dict, data, indent=4)                        
+
+    def make_pdtfiles(self): 
+        for link in self.links:
+            self.create_pdtfolder(link)
+            self.get_text(link)
+            self.update_pdt_dict(link)
+            self.save_locally(link)
+        return
                 
     def close_window(self):
         self.driver.close()
@@ -147,18 +141,19 @@ def fetch():
     homepage = "https://www.ikea.com"
     acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
     productname = "sofa-beds"
-    producttypeurl = "https://www.ikea.com/gb/en/cat/sofa-beds-20874/?page=9"
-    productid = '//div[@data-testid="plp-product-card"]'
-    productrefid = '//div[@data-ref-id="59419227"]'
+    producttypeurl = "https://www.ikea.com/gb/en/cat/sofa-beds-20874"
+    productid = '//div[@data-testid="plp-product-card"]'    
     
-    bot = Scraper(homepage, acceptcookiesid, productname, producttypeurl, productid, productrefid)
+    bot = Scraper(homepage, acceptcookiesid, productname, producttypeurl, productid)
 
     #actions
     bot.launch_homepage()
     bot.max_window()
     bot.accept_cookies()
-    bot.store_data()
-    bot.save_locally()
+    bot.scroll_down()
+    bot.get_links()
+    bot.create_mainfolder()
+    bot.make_pdtfiles()
     bot.close_window()
     bot.stop_running()
     

@@ -45,3 +45,4 @@ def createFolder(directory):
 # Example
 createFolder('./testfile/')
 # Creates a folder in the current directory called testfile
+
