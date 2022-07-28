@@ -105,10 +105,11 @@ class Scraper:
         pdtrefid = self.get_pdtrefid(link)
         self.pdt_dict['SysUID'].append(uuid) 
         self.pdt_dict['ProductID'].append(pdtrefid)             
-        self.pdt_dict['Imagelink'].append(image_link) 
+        self.pdt_dict['Link'].append(link) 
         self.pdt_dict['Brand'].append(self.brand) 
         self.pdt_dict['Description'].append(self.pdtdescription)  
-        self.pdt_dict['Price'].append(self.pdtprice)                             
+        self.pdt_dict['Price'].append(self.pdtprice)
+        self.pdt_dict['Imagelink'].append(image_link)                              
         
     def save_locally(self, link): 
         #save image         
