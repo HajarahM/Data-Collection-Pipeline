@@ -20,7 +20,7 @@ class Scraper:
         self.productname = productname
         self.producttypeurl = producttypeurl
         self.productid = productid        
-        self.links = [[], []]
+        self.links = []
         self.pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
 
     def createFolder(self, directory):
