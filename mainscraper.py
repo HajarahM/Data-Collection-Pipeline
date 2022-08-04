@@ -1,15 +1,16 @@
-import selenium
-from selenium import webdriver
-from selenium.webdriver import Chrome
-from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup
-import threading
 import time
 import requests
 import uuid6
 import os
 import json
 import inspect
+import selenium
+from selenium import webdriver
+from selenium.webdriver import Chrome
+from selenium.webdriver.common.by import By
+
+
+
 
 class Scraper:
     def __init__(self, homepage, acceptcookiesid, productname, producttypeurl, productid):
@@ -25,7 +26,7 @@ class Scraper:
         """
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.options.add_argument("--headless") # make it not visible, just comment if you like seeing opened browsers
+        self.options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=self.options)
         self.homepage = homepage
         self.acceptcookiesid = acceptcookiesid
@@ -35,6 +36,7 @@ class Scraper:
         self.links = []
         self.pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
 
+    @staticmethod
     def createFolder(self, directory):
         """ 
         Description
@@ -353,18 +355,13 @@ class Scraper:
         -------
         No return value, product folder created and saved with respective data and images
         """
-        threads = []
         print("Saving data into files ...")
         for link in self.links:
-            a = self.create_pdtfolder(link)
-            a = self.get_text(link)
-            a = self.update_pdt_dict(link)
-            a = self.save_locally(link)
-            th = threading.Thread(target=a)        
-        for th in threads:
-            th.join()
-        print("Saving complete")
-        return
+            self.create_pdtfolder(link)
+            self.get_text(link)
+            self.update_pdt_dict(link)
+            self.save_locally(link)       
+    
                 
     def close_window(self):
         """ 
@@ -417,6 +414,7 @@ def fetch():
     productid = '//div[@data-testid="plp-product-card"]'    
     
     bot = Scraper(homepage, acceptcookiesid, productname, producttypeurl, productid)
+
     start_time = time.time()
     #actions
     bot.launch_homepage()
@@ -428,8 +426,9 @@ def fetch():
     bot.make_pdtfiles()
     bot.close_window()
     bot.stop_running()
-    print("Multiple threads took ", (time.time() - start_time), " seconds")
-    
+    print("Saving complete")
+    print("Sequential took ", (time.time() - start_time), " seconds")
+
 if __name__ == "__main__":
     fetch()
 
