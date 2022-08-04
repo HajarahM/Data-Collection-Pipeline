@@ -8,12 +8,15 @@ import selenium
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 
 
 
 
 class Scraper:
-    def __init__(self, homepage, acceptcookiesid, productname, producttypeurl, productid):
+    def __init__(self, productname):
         """
         Description
         ----------
@@ -26,13 +29,11 @@ class Scraper:
         """
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.options.add_argument("--headless")
+        # self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
         self.driver = webdriver.Chrome(options=self.options)
-        self.homepage = homepage
-        self.acceptcookiesid = acceptcookiesid
-        self.productname = productname
-        self.producttypeurl = producttypeurl
-        self.productid = productid        
+        self.homepage = "https://www.ikea.com"
+        self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
+        self.productname = productname 
         self.links = []
         self.pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
 
@@ -72,6 +73,10 @@ class Scraper:
         File is created, no return value.
         """
         self.driver.get(self.homepage)
+        time.sleep(0.5)
+        go_shopping_button = self.driver.find_element(by=By.XPATH, value='.//*[@class="website-link svelte-bdk5aj"]').get_attribute('href')
+        self.driver.get(go_shopping_button)
+        time.sleep(0.5)
 
     def max_window(self):
         """ 
@@ -105,6 +110,15 @@ class Scraper:
         except:
             pass # If there is no cookies button, we won't find it, so we can pass
 
+    def search_product(self):
+        search = self.driver.find_element(by=By.XPATH, value='.//input[@class="search-field__input"]')
+        search.send_keys(self.productname)
+        search.send_keys(Keys.RETURN)
+        time.sleep(5)
+        producttypeurl = self.driver.current_url
+        print (producttypeurl)
+        return producttypeurl
+
     def scroll_down(self):
         """ 
         Description
@@ -134,13 +148,13 @@ class Scraper:
         -------
         self.links[]: A list of links to each of the product pages
         """
-        self.driver.get(self.producttypeurl)
+        self.driver.get(self.search_product())
         self.accept_cookies()
         print("Loading all images...")
         time.sleep(7)
-        print("Fetching links...")
+        print("Fetching links...")        
         self.links = []
-        product_list = self.driver.find_elements(by=By.XPATH, value=self.productid)
+        product_list = self.driver.find_elements(by=By.XPATH, value='//*[@class="serp-grid__item search-grid__item product-fragment"]')
         for item in product_list:
             # get links
             a_tag = item.find_element(by=By.XPATH, value='.//a')
@@ -163,7 +177,7 @@ class Scraper:
         -------
         No return value.
         """        
-        self.createFolder('./raw_data/') #create raw_data folder and product folder
+        self.createFolder('./raw_data1/') #create raw_data folder and product folder
         
     def get_pdtrefid(self, link): #get pdt number from website
         """ 
@@ -198,7 +212,7 @@ class Scraper:
         No return value, product folder is created and named with the product number
         """ 
         pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data/{pdtrefid}/')
+        self.createFolder(f'./raw_data1/{pdtrefid}/')
               
     def generate_UUID(self):
         """ 
@@ -292,22 +306,21 @@ class Scraper:
         generate_UUID(): method that returns unique locally-generated product ID
         get_image_source(): method/function that returns the image url
         get_pdtrefid(): methods/function that returns the product ID assigned by the website
-        self.pdt_dict[]: product dictionary list
-                
-        Returns
-        -------
-        self.pdt_dict[]: updated product dictionary list
+        self.pdt_dict[]: product dictionary list  
         """
+        pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
         uuid = self.generate_UUID()
         image_link = self.get_image_source(link) 
         pdtrefid = self.get_pdtrefid(link)
-        self.pdt_dict['SysUID'].append(uuid) 
-        self.pdt_dict['ProductID'].append(pdtrefid)             
-        self.pdt_dict['Link'].append(link) 
-        self.pdt_dict['Brand'].append(self.brand) 
-        self.pdt_dict['Description'].append(self.pdtdescription)  
-        self.pdt_dict['Price'].append(self.pdtprice)
-        self.pdt_dict['Imagelink'].append(image_link)                              
+        pdt_dict['SysUID'].append(uuid) 
+        pdt_dict['ProductID'].append(pdtrefid)             
+        pdt_dict['Link'].append(link) 
+        pdt_dict['Brand'].append(self.brand) 
+        pdt_dict['Description'].append(self.pdtdescription)  
+        pdt_dict['Price'].append(self.pdtprice)
+        pdt_dict['Imagelink'].append(image_link)    
+
+        return pdt_dict                          
         
     def save_locally(self, link): 
         """ 
@@ -329,13 +342,14 @@ class Scraper:
         #save image         
         retrieved_image=self.download_image(link)  
         pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data/{pdtrefid}/images') 
-        with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
+        self.createFolder(f'./raw_data1/{pdtrefid}/images') 
+        with open(f'./raw_data1/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
             outimage.write(retrieved_image)
-        #save data
+        #save dictionary data into json file
+        pdt_dict = self.update_pdt_dict(link)
         #create and save into data.json file
-        with open(f'./raw_data/{pdtrefid}/data.json', 'w') as data:
-            json.dump(self.pdt_dict, data, indent=4)                        
+        with open(f'./raw_data1/{pdtrefid}/data.json', 'w') as data:
+            json.dump(pdt_dict, data, indent=4)                        
 
     def make_pdtfiles(self): 
         """ 
@@ -358,76 +372,48 @@ class Scraper:
         print("Saving data into files ...")
         for link in self.links:
             self.create_pdtfolder(link)
-            self.get_text(link)
-            self.update_pdt_dict(link)
+            self.get_text(link)            
             self.save_locally(link)       
     
                 
-    def close_window(self):
-        """ 
-        Description
-        -----------
-        Closes the webpage and browser
-        
-        Parameters and Returns
-        ----------
-        No input parameters, no return
-        """
-        self.driver.close()
-
     def stop_running(self):
         """ 
         Description
         -----------
-        Quits the driver to stop running
-        
-        Parameters and Returns
-        ----------
-        No input parameters, no return
+        Closes the webpage and quits browser
         """
+        self.driver.close()
         self.driver.quit()   
+       
 
 def fetch():
     """ 
     Description
     -----------
-    Main function that takes in all inputs and runs scraper class methods
+    Main function that takes in product name to be searched and runs scraper class methods
         
     Parameters
     ----------
     homepage: input of homepage url
-    productname: string, name of product
-    acceptcookiesid: XPATH to accept cookies button
-    producttypeurl: url of the specific product type of the products to be downloaded
-    productid:  XPATH of the products to be downloaded
-    bot: Scraper class with all input parameters
-        
-    Returns
-    -------
-    No return value.
+    productname: str
+                    name of product    
     """
-    #inputs
-    homepage = "https://www.ikea.com"
-    acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
-    productname = "sofa-beds"
-    producttypeurl = "https://www.ikea.com/gb/en/cat/sofa-beds-20874/?page=2"
-    productid = '//div[@data-testid="plp-product-card"]'    
-    
-    bot = Scraper(homepage, acceptcookiesid, productname, producttypeurl, productid)
+    #input
+    productname = "chair"
+        
+    bot = Scraper(productname)
 
     start_time = time.time()
     #actions
     bot.launch_homepage()
     bot.max_window()
-    bot.accept_cookies()
-    bot.scroll_down()
+    bot.accept_cookies()        
     bot.get_links()
     bot.create_mainfolder()
-    bot.make_pdtfiles()
-    bot.close_window()
+    bot.make_pdtfiles()    
     bot.stop_running()
     print("Saving complete")
-    print("Sequential took ", (time.time() - start_time), " seconds")
+    print("It took ", (time.time() - start_time), " seconds to scrape website")
 
 if __name__ == "__main__":
     fetch()
