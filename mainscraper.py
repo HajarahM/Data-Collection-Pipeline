@@ -24,8 +24,7 @@ class Scrape:
         
         Parameters
         ----------
-        Parameters passed into this class are all strings: homepage url, XPATHs to accept cookies and product (id), the product name, and the url to the product page.
-        If the user wants to get all the products listed, the url to be passed has to be for the last page.        
+        productname: str, product to be searched on ikea website and scraped     
         """
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -34,8 +33,7 @@ class Scrape:
         self.homepage = "https://www.ikea.com"
         self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
         self.productname = productname 
-        self.links = []
-        self.pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
+        self.links = []          
 
     def createFolder(self, directory):
         """ 
@@ -45,11 +43,7 @@ class Scrape:
         
         Parameters
         ----------
-        directory: the path to the directory where the new file is to be saved. "./" being the current folder of the python file.
-        
-        Returns
-        -------
-        File is created, no return value.
+        directory: str, the path to the directory where the new file is to be saved. "./" being the current folder of the python file.
         """
         try:
             if not os.path.exists(directory):
@@ -61,48 +55,26 @@ class Scrape:
         """ 
         Description
         -----------
-        Launches the homepage specified when this class is called - named in the __init__ method
+        Launches the homepage (of ikea) specified in the __init__ method, maximizes the wondow, and clicks on "go-shopping" and goes to the 'shopping' page
         
         Parameters
         ----------
-        homepage: the homepage URL of the website
-        
-        Returns
-        -------
-        File is created, no return value.
+        homepage: str, homepage of website
         """
         self.driver.get(self.homepage)
+        self.driver.maximize_window()
         time.sleep(0.5)
         go_shopping_button = self.driver.find_element(by=By.XPATH, value='.//*[@class="website-link svelte-bdk5aj"]').get_attribute('href')
         self.driver.get(go_shopping_button)
         time.sleep(1)
-
-    def max_window(self):
-        """ 
-        Description
-        -----------
-        Maximizes the window of the page that has been opened to fit the screen.
-        
-        Parameters and Returns
-        ----------
-        No input parameters, no returns
-        """
-        self.driver.maximize_window()
-    
+     
     def accept_cookies(self):
         """ 
         Description
         -----------
         Method to bypass cookies if there is an 'accept cookies' button.
-        
-        Parameters
-        ----------
-        acceptcookiesid: XPATH of the 'accept cookies' button to be specified when this class is called - named in the __init__ method
-        
-        Returns
-        -------
-        'accept cookies' button is clicked, no return value.
         """
+        
         try:
             accept_cookies_button = self.driver.find_element(by=By.XPATH, value=self.acceptcookiesid)
             accept_cookies_button.click() 
@@ -110,6 +82,14 @@ class Scrape:
             pass # If there is no cookies button, we won't find it, so we can pass
 
     def search_product(self):
+        """ 
+        Description
+        -----------
+        Method to search for product.
+        Returns
+        ------
+        producttypeurl:  str, the url of the results page sorted by best-match                 
+        """
         search = self.driver.find_element(by=By.XPATH, value='.//input[@class="search-field__input"]')
         search.send_keys(self.productname, Keys.RETURN)        
         time.sleep(5)
@@ -121,11 +101,7 @@ class Scrape:
         """ 
         Description
         -----------
-        Scroll down to the bottom of the page that has been opened and waits for 2 seconds for loading of data and images on the page.
-        
-        Parameters and Returns
-        ----------
-        No input parameters, no return
+        Scroll down to the bottom of the page that has been opened and waits for 2 seconds for loading of data and images on the page.        
         """
         self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
         time.sleep(2)
@@ -138,54 +114,39 @@ class Scrape:
         
         Parameters
         ----------
-        producttypeurl: url to the list of products that have been searched
-        productid: XPATH of container identifier used by website common to each product
-        productname: name of product specified when this class is called - named in the __init__ method
+        producttypeurl, srt: url to the list of products that have been searched
+        productid: str, XPATH of container identifier used by website common to each product
+        productname: str, name of product specified when this class is called - named in the __init__ method
         
         Returns
         -------
-        self.links[]: A list of links to each of the product pages
+        self.links[]: list, A list of links to each of the product pages
         """
         self.driver.get(self.search_product())
         self.accept_cookies()
-        print("Loading all images...")
+        print("Loading all images...")        
         time.sleep(7)
+        self.scroll_down()
         print("Fetching links...")        
         self.links = []
         product_list = self.driver.find_elements(by=By.XPATH, value='//*[@class="serp-grid__item search-grid__item product-fragment"]')
         for item in product_list:
             # get links
             a_tag = item.find_element(by=By.XPATH, value='.//a')
-            self.link = a_tag.get_attribute('href')
-            self.links.append(self.link)                          
+            link = a_tag.get_attribute('href')
+            self.links.append(link)                          
         print(f'The top {len(self.links)} items of {self.productname} have been found')
-        # return (self.links) 
-        
-    def create_mainfolder(self):
-        """ 
-        Description
-        -----------
-        Uses the "createFolder()" function to create the main folder named 'raw_data' in which the product libraries will be saved.
-        
-        Parameters
-        ----------
-        directory: the path to the directory where the new file is to be saved (in this case to be saved as "./raw_data/"). "./" being the current folder of the python file.
-        
-        Returns
-        -------
-        No return value.
-        """        
-        self.createFolder('./raw_data/') #create raw_data folder and product folder
-        
+        return (self.links)
+               
     def get_pdtrefid(self, link): #get pdt number from website
         """ 
         Description
         -----------
-        Obtain Product Reference ID (pdtrefid) from the link that has been fetched and saved into the self.links list
+        Obtain Product Reference ID (pdtrefid) from the link that has been fetched and saved into the 'self.links' list
         
         Parameters
         ----------
-        link: product link url from the self.links list
+        link: str, product link url from the 'self.links' list
                
         Returns
         -------
@@ -202,34 +163,13 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the self.links list
-        pdtrefid: the product id returned by the "get_pdtrefid()" function
-        
-        Returns
-        -------
-        No return value, product folder is created and named with the product number
+        link: str, product link url from the 'self.links' list
+        pdtrefid: int, the product id returned by the "get_pdtrefid()" function        
         """ 
         pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data/{pdtrefid}/')
-              
-    def generate_UUID(self):
-        """ 
-        Description
-        -----------
-        Locally generate a unique universal/global indentifier for each product
-        
-        Parameters
-        ----------
-        No input parameters
-               
-        Yields
-        -------
-        uuid: hex int, unique universal ID is generated
-        """   
-        uuid = uuid6.uuid7().hex
-        return uuid
-
-    def get_text(self, link): 
+        self.createFolder(f'./raw_data/{pdtrefid}/')    
+    
+    def get_data(self, link): 
         """ 
         Description
         -----------
@@ -237,14 +177,11 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the self.links list to product page
-                
-        Returns
-        -------
-        brand: brand of the product
-        pdtdescription: brief description of the product
-        pdtprice: Price of product in '£'
-        currency: the currency was commented out due to failure to identify the respective unique XPATH
+        link: str, product link url from the 'self.links' list to product page        
+        brand: str, brand of the product
+        pdtdescription: str, brief description of the product
+        pdtprice: int, Price of product in '£'
+        currency: str, the currency was commented out due to failure to identify the respective unique XPATH
         """     
         self.driver.get(link) 
         time.sleep(0.5)          
@@ -262,11 +199,11 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the self.links list to product page
+        link: str: product link url from the 'self.links' list to product page
                 
         Returns
         -------
-        image_src: url to the image of the product
+        image_src: str: url to the image of the product
         """
         self.driver.get(link)
         time.sleep(0.5)
@@ -281,7 +218,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the self.links list to product page
+        link: product link url from the 'self.links' list to product page
         get_image_source(): method/function that returns the image url
                 
         Returns
@@ -300,14 +237,14 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the self.links list to product page
-        generate_UUID(): method that returns unique locally-generated product ID
-        get_image_source(): method/function that returns the image url
-        get_pdtrefid(): methods/function that returns the product ID assigned by the website
-        self.pdt_dict[]: product dictionary list  
+        link: str, product link url from the 'self.links' list to product page
+        
+        Returns
+        -------
+        pdt_dict[]: list, updated product dictionary list
         """
         pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
-        uuid = self.generate_UUID()
+        uuid = uuid6.uuid7().hex # generate UUID (unique universal ID)
         image_link = self.get_image_source(link) 
         pdtrefid = self.get_pdtrefid(link)
         pdt_dict['SysUID'].append(uuid) 
@@ -329,13 +266,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the self.links list
-        pdtrefid: the product id returned by the "get_pdtrefid()" function
-        retrieved_image: the retrieved image returned by the "download_image()" function
-        
-        Returns
-        -------
-        No return value, images folder is created within product folder and product image saved; product dictionary is saved into a data.json file in the product folder.
+        link: product link url from the 'self.links' list      
         """ 
         #save image         
         retrieved_image=self.download_image(link)  
@@ -353,27 +284,37 @@ class Scrape:
         """ 
         Description
         -----------
-        Main method that puts all steps together to make/compile product files by looping through each link in the self.links list and performing the respective actions below for each link.
-        
-        Parameters
-        ----------
-        link: product link url from the self.links list
-        create_pdtfolder(): create each product folder with product website-reference ID as it's name
-        get_text(): get the data of specific product from product page
-        update_pdt_dict(): update product dictionary list
-        save_locally(): save product data and images locally
-        
-        Returns
-        -------
-        No return value, product folder created and saved with respective data and images
+        Main method that puts all steps together to make/compile product files by creating the main folder(raw-data)
+        and looping through each link in the 'self.links' list and performing the respective actions below for each link.       
         """
         print("Saving data into files ...")
+        self.createFolder('./raw_data/') 
         for link in self.links:
             self.create_pdtfolder(link)
-            self.get_text(link)            
-            self.save_locally(link)       
+            self.get_data(link)            
+            self.save_locally(link)      
     
-                
+    def fetch(self):
+        """ 
+        Description
+        -----------
+        Main function that takes in product name to be searched and runs scraper class methods
+            
+        Parameters
+        ----------
+        homepage: input of homepage url
+        productname: str
+                        name of product    
+        """           
+        start_time = time.time()        
+        self.launch_homepage()    
+        self.accept_cookies()        
+        self.get_links()
+        self.make_pdtfiles()    
+        self.stop_running()
+        print("Your product files have been saved in the raw-data folder")
+        print(f"It took ", (time.time() - start_time), " seconds to scrape the best-matched products of your search")
+
     def stop_running(self):
         """ 
         Description
@@ -383,33 +324,9 @@ class Scrape:
         self.driver.close()
         self.driver.quit()   
        
-
-def fetch(productname):
-    """ 
-    Description
-    -----------
-    Main function that takes in product name to be searched and runs scraper class methods
-        
-    Parameters
-    ----------
-    homepage: input of homepage url
-    productname: str
-                    name of product    
-    """          
-    bot = Scrape(productname)
-    start_time = time.time()
-    #actions
-    bot.launch_homepage()
-    bot.max_window()
-    bot.accept_cookies()        
-    bot.get_links()
-    bot.create_mainfolder()
-    bot.make_pdtfiles()    
-    bot.stop_running()
-    print("Your product files have been saved in the raw-data folder")
-    print(f"It took ", (time.time() - start_time), " seconds to scrape the best-matched products of your search")
+bot = Scrape('desk')
 
 if __name__ == "__main__":
-    fetch('desk')
+    bot.fetch()
 
 # print(inspect.getdoc())
