@@ -15,7 +15,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 
-class Scraper:
+class Scrape:
     def __init__(self, productname):
         """
         Description
@@ -37,7 +37,6 @@ class Scraper:
         self.links = []
         self.pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
 
-    @staticmethod
     def createFolder(self, directory):
         """ 
         Description
@@ -76,7 +75,7 @@ class Scraper:
         time.sleep(0.5)
         go_shopping_button = self.driver.find_element(by=By.XPATH, value='.//*[@class="website-link svelte-bdk5aj"]').get_attribute('href')
         self.driver.get(go_shopping_button)
-        time.sleep(0.5)
+        time.sleep(1)
 
     def max_window(self):
         """ 
@@ -112,8 +111,7 @@ class Scraper:
 
     def search_product(self):
         search = self.driver.find_element(by=By.XPATH, value='.//input[@class="search-field__input"]')
-        search.send_keys(self.productname)
-        search.send_keys(Keys.RETURN)
+        search.send_keys(self.productname, Keys.RETURN)        
         time.sleep(5)
         producttypeurl = self.driver.current_url
         print (producttypeurl)
@@ -140,7 +138,7 @@ class Scraper:
         
         Parameters
         ----------
-        producttypeurl: url to the list of products you want to fetch specified when this class is called - named in the __init__ method
+        producttypeurl: url to the list of products that have been searched
         productid: XPATH of container identifier used by website common to each product
         productname: name of product specified when this class is called - named in the __init__ method
         
@@ -160,7 +158,7 @@ class Scraper:
             a_tag = item.find_element(by=By.XPATH, value='.//a')
             self.link = a_tag.get_attribute('href')
             self.links.append(self.link)                          
-        print(f'{len(self.links)} items stored in {self.productname} list')
+        print(f'The top {len(self.links)} items of {self.productname} have been found')
         # return (self.links) 
         
     def create_mainfolder(self):
@@ -177,7 +175,7 @@ class Scraper:
         -------
         No return value.
         """        
-        self.createFolder('./raw_data1/') #create raw_data folder and product folder
+        self.createFolder('./raw_data/') #create raw_data folder and product folder
         
     def get_pdtrefid(self, link): #get pdt number from website
         """ 
@@ -212,7 +210,7 @@ class Scraper:
         No return value, product folder is created and named with the product number
         """ 
         pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data1/{pdtrefid}/')
+        self.createFolder(f'./raw_data/{pdtrefid}/')
               
     def generate_UUID(self):
         """ 
@@ -342,13 +340,13 @@ class Scraper:
         #save image         
         retrieved_image=self.download_image(link)  
         pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data1/{pdtrefid}/images') 
-        with open(f'./raw_data1/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
+        self.createFolder(f'./raw_data/{pdtrefid}/images') 
+        with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
             outimage.write(retrieved_image)
         #save dictionary data into json file
         pdt_dict = self.update_pdt_dict(link)
         #create and save into data.json file
-        with open(f'./raw_data1/{pdtrefid}/data.json', 'w') as data:
+        with open(f'./raw_data/{pdtrefid}/data.json', 'w') as data:
             json.dump(pdt_dict, data, indent=4)                        
 
     def make_pdtfiles(self): 
@@ -386,7 +384,7 @@ class Scraper:
         self.driver.quit()   
        
 
-def fetch():
+def fetch(productname):
     """ 
     Description
     -----------
@@ -397,12 +395,8 @@ def fetch():
     homepage: input of homepage url
     productname: str
                     name of product    
-    """
-    #input
-    productname = "chair"
-        
-    bot = Scraper(productname)
-
+    """          
+    bot = Scrape(productname)
     start_time = time.time()
     #actions
     bot.launch_homepage()
@@ -412,10 +406,10 @@ def fetch():
     bot.create_mainfolder()
     bot.make_pdtfiles()    
     bot.stop_running()
-    print("Saving complete")
-    print("It took ", (time.time() - start_time), " seconds to scrape website")
+    print("Your product files have been saved in the raw-data folder")
+    print(f"It took ", (time.time() - start_time), " seconds to scrape the best-matched products of your search")
 
 if __name__ == "__main__":
-    fetch()
+    fetch('desk')
 
 # print(inspect.getdoc())
