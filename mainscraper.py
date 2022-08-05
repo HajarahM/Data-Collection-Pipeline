@@ -4,16 +4,12 @@ import uuid6
 import os
 import json
 import inspect
-import selenium
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-
-
-
 
 class Scrape:
     def __init__(self, productname):
@@ -35,7 +31,7 @@ class Scrape:
         self.productname = productname 
         self.links = []          
 
-    def createFolder(self, directory):
+    def __createFolder(self, directory):
         """ 
         Description
         -----------
@@ -68,7 +64,7 @@ class Scrape:
         self.driver.get(go_shopping_button)
         time.sleep(1)
      
-    def accept_cookies(self):
+    def _accept_cookies(self):
         """ 
         Description
         -----------
@@ -81,7 +77,7 @@ class Scrape:
         except:
             pass # If there is no cookies button, we won't find it, so we can pass
 
-    def search_product(self):
+    def _search_product(self):
         """ 
         Description
         -----------
@@ -97,7 +93,7 @@ class Scrape:
         print (producttypeurl)
         return producttypeurl
 
-    def scroll_down(self):
+    def _scroll_down(self):
         """ 
         Description
         -----------
@@ -122,11 +118,11 @@ class Scrape:
         -------
         self.links[]: list, A list of links to each of the product pages
         """
-        self.driver.get(self.search_product())
-        self.accept_cookies()
+        self.driver.get(self._search_product())
+        self._accept_cookies()
         print("Loading all images...")        
         time.sleep(7)
-        self.scroll_down()
+        self._scroll_down()
         print("Fetching links...")        
         self.links = []
         product_list = self.driver.find_elements(by=By.XPATH, value='//*[@class="serp-grid__item search-grid__item product-fragment"]')
@@ -138,7 +134,7 @@ class Scrape:
         print(f'The top {len(self.links)} items of {self.productname} have been found')
         return (self.links)
                
-    def get_pdtrefid(self, link): #get pdt number from website
+    def __get_pdtrefid(self, link): #get pdt number from website
         """ 
         Description
         -----------
@@ -155,7 +151,7 @@ class Scrape:
         pdtrefid = link[link.rindex('-')+1:].strip('/')   
         return pdtrefid
 
-    def create_pdtfolder(self, link):   # create folder with pdt number      
+    def __create_pdtfolder(self, link):   # create folder with pdt number      
         """ 
         Description
         -----------
@@ -166,10 +162,10 @@ class Scrape:
         link: str, product link url from the 'self.links' list
         pdtrefid: int, the product id returned by the "get_pdtrefid()" function        
         """ 
-        pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data/{pdtrefid}/')    
+        pdtrefid = self.__get_pdtrefid(link)
+        self.__createFolder(f'./raw_data/{pdtrefid}/')    
     
-    def get_data(self, link): 
+    def _get_data(self, link): 
         """ 
         Description
         -----------
@@ -191,7 +187,7 @@ class Scrape:
         self.pdtprice = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__integer"]').text 
         # self.currency = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__currency-symbol pip-price__currency-symbol--leading \n\t pip-price__currency-symbol--superscript"]').text       
         
-    def get_image_source(self, link):
+    def __get_image_source(self, link):
         """ 
         Description
         -----------
@@ -210,7 +206,7 @@ class Scrape:
         image_src = self.driver.find_element(by=By.XPATH, value='//img[@class="pip-aspect-ratio-image__image"]').get_attribute('src')
         return image_src
         
-    def download_image(self, link):   
+    def __download_image(self, link):   
         """ 
         Description
         -----------
@@ -225,11 +221,11 @@ class Scrape:
         -------
         retrieved_image: image of specific product
         """
-        image_link = self.get_image_source(link)     
+        image_link = self.__get_image_source(link)     
         retrieved_image = requests.get(image_link).content        
         return retrieved_image
 
-    def update_pdt_dict(self, link):
+    def _update_pdt_dict(self, link):
         """ 
         Description
         -----------
@@ -245,8 +241,8 @@ class Scrape:
         """
         pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
         uuid = uuid6.uuid7().hex # generate UUID (unique universal ID)
-        image_link = self.get_image_source(link) 
-        pdtrefid = self.get_pdtrefid(link)
+        image_link = self.__get_image_source(link) 
+        pdtrefid = self.__get_pdtrefid(link)
         pdt_dict['SysUID'].append(uuid) 
         pdt_dict['ProductID'].append(pdtrefid)             
         pdt_dict['Link'].append(link) 
@@ -257,7 +253,7 @@ class Scrape:
 
         return pdt_dict                          
         
-    def save_locally(self, link): 
+    def _save_locally(self, link): 
         """ 
         Description
         -----------
@@ -269,13 +265,13 @@ class Scrape:
         link: product link url from the 'self.links' list      
         """ 
         #save image         
-        retrieved_image=self.download_image(link)  
-        pdtrefid = self.get_pdtrefid(link)
-        self.createFolder(f'./raw_data/{pdtrefid}/images') 
+        retrieved_image=self.__download_image(link)  
+        pdtrefid = self.__get_pdtrefid(link)
+        self.__createFolder(f'./raw_data/{pdtrefid}/images') 
         with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
             outimage.write(retrieved_image)
         #save dictionary data into json file
-        pdt_dict = self.update_pdt_dict(link)
+        pdt_dict = self._update_pdt_dict(link)
         #create and save into data.json file
         with open(f'./raw_data/{pdtrefid}/data.json', 'w') as data:
             json.dump(pdt_dict, data, indent=4)                        
@@ -288,11 +284,11 @@ class Scrape:
         and looping through each link in the 'self.links' list and performing the respective actions below for each link.       
         """
         print("Saving data into files ...")
-        self.createFolder('./raw_data/') 
+        self.__createFolder('./raw_data/') 
         for link in self.links:
-            self.create_pdtfolder(link)
-            self.get_data(link)            
-            self.save_locally(link)      
+            self.__create_pdtfolder(link)
+            self._get_data(link)            
+            self._save_locally(link)      
     
     def fetch(self):
         """ 
@@ -308,7 +304,7 @@ class Scrape:
         """           
         start_time = time.time()        
         self.launch_homepage()    
-        self.accept_cookies()        
+        self._accept_cookies()        
         self.get_links()
         self.make_pdtfiles()    
         self.stop_running()
@@ -324,7 +320,7 @@ class Scrape:
         self.driver.close()
         self.driver.quit()   
        
-bot = Scrape('desk')
+bot = Scrape('sofa-bed')
 
 if __name__ == "__main__":
     bot.fetch()
