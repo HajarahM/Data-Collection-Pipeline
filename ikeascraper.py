@@ -29,7 +29,8 @@ class Scrape:
         self.homepage = "https://www.ikea.com"
         self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
         self.productname = productname 
-        self.links = []          
+        self.links = []
+        self.ikea_db_dict = [] # database of dictionaries     
 
     def __createFolder(self, directory):
         """ 
@@ -47,7 +48,7 @@ class Scrape:
         except OSError:
             print ('Error: Creating directory. ' +  directory)
 
-    def launch_homepage(self):
+    def launch_homepage(self): #search page
         """ 
         Description
         -----------
@@ -118,8 +119,8 @@ class Scrape:
         -------
         self.links[]: list, A list of links to each of the product pages
         """
-        self.driver.get(self._search_product())
         self._accept_cookies()
+        self.driver.get(self._search_product())
         print("Loading all images...")        
         time.sleep(7)
         self._scroll_down()
@@ -250,6 +251,7 @@ class Scrape:
         pdt_dict['Description'].append(self.pdtdescription)  
         pdt_dict['Price'].append(self.pdtprice)
         pdt_dict['Imagelink'].append(image_link)    
+        self.ikea_db_dict.append(pdt_dict)
 
         return pdt_dict                          
         
@@ -270,11 +272,15 @@ class Scrape:
         self.__createFolder(f'./raw_data/{pdtrefid}/images') 
         with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
             outimage.write(retrieved_image)
-        #save dictionary data into json file
-        pdt_dict = self._update_pdt_dict(link)
+
         #create and save into data.json file
+        pdt_dict = self._update_pdt_dict(link)  
         with open(f'./raw_data/{pdtrefid}/data.json', 'w') as data:
-            json.dump(pdt_dict, data, indent=4)                        
+            json.dump(pdt_dict, data, indent=4)
+
+        #save into Ikea products local database with list of product dictionaries          
+        with open(f'./raw_data/ikeadata.json', 'w') as data:
+            json.dump(self.ikea_db_dict, data, indent=4)                
 
     def make_pdtfiles(self): 
         """ 
@@ -303,8 +309,7 @@ class Scrape:
                         name of product    
         """           
         start_time = time.time()        
-        self.launch_homepage()    
-        self._accept_cookies()        
+        self.launch_homepage()      
         self.get_links()
         self.make_pdtfiles()    
         self.stop_running()
@@ -320,7 +325,7 @@ class Scrape:
         self.driver.close()
         self.driver.quit()   
        
-bot = Scrape('sofa-bed')
+bot = Scrape('chair')
 
 if __name__ == "__main__":
     bot.fetch()

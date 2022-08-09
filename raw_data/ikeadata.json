@@ -1,0 +1,508 @@
+[
+    {
+        "SysUID": [
+            "01828314c2b47504a04e82261ad34ea0"
+        ],
+        "ProductID": [
+            "s99240807"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/poaeng-armchair-oak-veneer-knisa-light-beige-s99240807/"
+        ],
+        "Brand": [
+            "PO\u00c4NG"
+        ],
+        "Description": [
+            "Armchair, oak veneer/Knisa light beige"
+        ],
+        "Price": [
+            "80"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/poaeng-armchair-oak-veneer-hillared-anthracite__0497180_pe629007_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828314da3e7573a0412a4d992f977f"
+        ],
+        "ProductID": [
+            "10219178"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/adde-chair-white-10219178/"
+        ],
+        "Brand": [
+            "ADDE"
+        ],
+        "Description": [
+            "Chair, white"
+        ],
+        "Price": [
+            "12"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/adde-chair-black__0728277_pe736167_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828314edb77800b446b5983ebee49c"
+        ],
+        "ProductID": [
+            "70359830"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/strandmon-wing-chair-nordvalla-dark-grey-70359830/"
+        ],
+        "Brand": [
+            "STRANDMON"
+        ],
+        "Description": [
+            "Wing chair, Nordvalla dark grey"
+        ],
+        "Price": [
+            "229"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/strandmon-wing-chair-kelinge-beige__0950941_pe800821_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "0182831502e675de9a4ebdbe1216707f"
+        ],
+        "ProductID": [
+            "10450511"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/ekenaeset-armchair-hillared-anthracite-10450511/"
+        ],
+        "Brand": [
+            "EKEN\u00c4SET"
+        ],
+        "Description": [
+            "Armchair, Hillared anthracite"
+        ],
+        "Price": [
+            "199"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/ekenaeset-armchair-hillared-anthracite__0729143_pe736711_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828315196a78d084f97317ec361247"
+        ],
+        "ProductID": [
+            "80349671"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/tobias-chair-transparent-chrome-plated-80349671/"
+        ],
+        "Brand": [
+            "TOBIAS"
+        ],
+        "Description": [
+            "Chair, transparent/chrome-plated"
+        ],
+        "Price": [
+            "70"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/tobias-chair-blue-chrome-plated__0727333_pe735605_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "018283152fd8772f8695fb9a3266d05c"
+        ],
+        "ProductID": [
+            "s49228474"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/fanbyn-chair-white-in-outdoor-s49228474/"
+        ],
+        "Brand": [
+            "FANBYN"
+        ],
+        "Description": [
+            "Chair, white/in/outdoor"
+        ],
+        "Price": [
+            "65"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/fanbyn-chair-grey-in-outdoor__0747677_pe744683_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828315485373619f3b882daa5c4e34"
+        ],
+        "ProductID": [
+            "60217799"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/gunde-folding-chair-white-60217799/"
+        ],
+        "Brand": [
+            "GUNDE"
+        ],
+        "Description": [
+            "Folding chair, white"
+        ],
+        "Price": [
+            "9"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/gunde-folding-chair-black__0728313_pe736184_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "018283155ff37aae853587c8e127f6ee"
+        ],
+        "ProductID": [
+            "90078462"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/pello-armchair-holmby-natural-90078462/"
+        ],
+        "Brand": [
+            "PELLO"
+        ],
+        "Description": [
+            "Armchair, Holmby natural"
+        ],
+        "Price": [
+            "75"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/pello-armchair-holmby-natural__38296_pe130209_s5.jpg?f=s"
+        ]
+    },
+    {
+        "SysUID": [
+            "0182831574347f0594fe62a2d2f951d0"
+        ],
+        "ProductID": [
+            "50403669"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/stein-chair-transparent-50403669/"
+        ],
+        "Brand": [
+            "STEIN"
+        ],
+        "Description": [
+            "Chair, transparent"
+        ],
+        "Price": [
+            "65"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/stein-chair-transparent__0773405_pe756294_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "018283158d2975e99e0a49036d065988"
+        ],
+        "ProductID": [
+            "s59444397"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/eldberget-malskaer-swivel-chair-beige-white-s59444397/"
+        ],
+        "Brand": [
+            "ELDBERGET / MALSK\u00c4R"
+        ],
+        "Description": [
+            "Swivel chair, beige/white"
+        ],
+        "Price": [
+            "40"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/eldberget-malskaer-swivel-chair-beige-black__0814556_pe772637_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828315a35e7688b3b59ea4b15252b4"
+        ],
+        "ProductID": [
+            "s39424060"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/poaeng-armchair-black-brown-storudden-white-black-s39424060/"
+        ],
+        "Brand": [
+            "PO\u00c4NG"
+        ],
+        "Description": [
+            "Armchair, black-brown/Storudden white/black"
+        ],
+        "Price": [
+            "115"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/poaeng-armchair-black-brown-hillared-anthracite__0497135_pe628962_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828315bd8e76d193bb72bc4beb0f1f"
+        ],
+        "ProductID": [
+            "10397788"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/skruvsta-swivel-chair-flackarp-medium-grey-10397788/"
+        ],
+        "Brand": [
+            "SKRUVSTA"
+        ],
+        "Description": [
+            "Swivel chair, Flackarp medium grey"
+        ],
+        "Price": [
+            "90"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/skruvsta-swivel-chair-flackarp-medium-grey__0724696_pe734578_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828315d6327ae7b57e62261f2ebb06"
+        ],
+        "ProductID": [
+            "20477949"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/remsta-armchair-hakebo-beige-20477949/"
+        ],
+        "Brand": [
+            "REMSTA"
+        ],
+        "Description": [
+            "Armchair, Hakebo beige"
+        ],
+        "Price": [
+            "150"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/remsta-armchair-hakebo-beige__0908599_pe783322_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828315ef0473348112209158c55648"
+        ],
+        "ProductID": [
+            "90339233"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/stefan-chair-white-90339233/"
+        ],
+        "Brand": [
+            "STEFAN"
+        ],
+        "Description": [
+            "Chair, white"
+        ],
+        "Price": [
+            "30"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/stefan-chair-brown-black__0727320_pe735593_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "0182831649a2771fbca1056b5d39ea59"
+        ],
+        "ProductID": [
+            "20530621"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/teodores-chair-black-20530621/"
+        ],
+        "Brand": [
+            "TEODORES"
+        ],
+        "Description": [
+            "Chair, black"
+        ],
+        "Price": [
+            "30"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/teodores-chair-black__1114240_pe871696_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "0182831665d37ece9c041db31fd14a80"
+        ],
+        "ProductID": [
+            "80222441"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/terje-folding-chair-white-80222441/"
+        ],
+        "Brand": [
+            "TERJE"
+        ],
+        "Description": [
+            "Folding chair, white"
+        ],
+        "Price": [
+            "19"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/terje-folding-chair-black__0727321_pe735619_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "018283167b00774aa3049948c35685fa"
+        ],
+        "ProductID": [
+            "50058376"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/agen-chair-rattan-bamboo-50058376/"
+        ],
+        "Brand": [
+            "AGEN"
+        ],
+        "Description": [
+            "Chair, rattan/bamboo"
+        ],
+        "Price": [
+            "70"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/agen-chair-rattan-bamboo__31428_pe120743_s5.jpg?f=s"
+        ]
+    },
+    {
+        "SysUID": [
+            "0182831698c07fde9a7d990d9ff04c48"
+        ],
+        "ProductID": [
+            "s49424088"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/poaeng-rocking-chair-oak-veneer-storudden-white-black-s49424088/"
+        ],
+        "Brand": [
+            "PO\u00c4NG"
+        ],
+        "Description": [
+            "Rocking-chair, oak veneer/Storudden white/black"
+        ],
+        "Price": [
+            "155"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/poaeng-rocking-chair-oak-veneer-hillared-anthracite__0497835_pe629356_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828316b0bf702aa651c966e1ba074b"
+        ],
+        "ProductID": [
+            "s59337670"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/loberget-sibben-childrens-desk-chair-white-s59337670/"
+        ],
+        "Brand": [
+            "LOBERGET / SIBBEN"
+        ],
+        "Description": [
+            "Children's desk chair, white"
+        ],
+        "Price": [
+            "19"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/loberget-sibben-childrens-desk-chair-white__0826517_pe776395_s5.jpg?f=s"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828316caee76099ad20224f36e624c"
+        ],
+        "ProductID": [
+            "10487227"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/linnebaeck-easy-chair-ramna-olive-green-10487227/"
+        ],
+        "Brand": [
+            "LINNEB\u00c4CK"
+        ],
+        "Description": [
+            "Easy chair, Ramna olive-green"
+        ],
+        "Price": [
+            "60"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/linnebaeck-easy-chair-ramna-light-grey__0951666_pe801310_s5.jpg?f=xu"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828316e7047d2b9aa334a00ae4ad93"
+        ],
+        "ProductID": [
+            "30507601"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/huvudspelare-gaming-chair-black-30507601/"
+        ],
+        "Brand": [
+            "HUVUDSPELARE"
+        ],
+        "Description": [
+            "Gaming chair, black"
+        ],
+        "Price": [
+            "60"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/huvudspelare-gaming-chair-black__1039660_pe840411_s5.jpg?f=s"
+        ]
+    },
+    {
+        "SysUID": [
+            "01828317002c71f6a50ab2b82a7003c8"
+        ],
+        "ProductID": [
+            "70434311"
+        ],
+        "Link": [
+            "https://www.ikea.com/gb/en/p/buskbo-armchair-rattan-70434311/"
+        ],
+        "Brand": [
+            "BUSKBO"
+        ],
+        "Description": [
+            "Armchair, rattan"
+        ],
+        "Price": [
+            "165"
+        ],
+        "Imagelink": [
+            "https://www.ikea.com/gb/en/images/products/buskbo-armchair-rattan__0679296_pe719536_s5.jpg?f=s"
+        ]
+    }
+]
