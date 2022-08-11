@@ -32,7 +32,7 @@ class Scrape:
         self.links = []
         self.ikea_db_dict = [] # database of dictionaries     
 
-    def __createFolder(self, directory):
+    def _createFolder(self, directory):
         """ 
         Description
         -----------
@@ -164,7 +164,7 @@ class Scrape:
         pdtrefid: int, the product id returned by the "get_pdtrefid()" function        
         """ 
         pdtrefid = self.__get_pdtrefid(link)
-        self.__createFolder(f'./raw_data/{pdtrefid}/')    
+        self._createFolder(f'./raw_data/{pdtrefid}/')    
     
     def _get_data(self, link): 
         """ 
@@ -269,7 +269,7 @@ class Scrape:
         #save image         
         retrieved_image=self.__download_image(link)  
         pdtrefid = self.__get_pdtrefid(link)
-        self.__createFolder(f'./raw_data/{pdtrefid}/images') 
+        self._createFolder(f'./raw_data/{pdtrefid}/images') 
         with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
             outimage.write(retrieved_image)
 
@@ -290,7 +290,7 @@ class Scrape:
         and looping through each link in the 'self.links' list and performing the respective actions below for each link.       
         """
         print("Saving data into files ...")
-        self.__createFolder('./raw_data/') 
+        self._createFolder('./raw_data/') 
         for link in self.links:
             self.__create_pdtfolder(link)
             self._get_data(link)            
