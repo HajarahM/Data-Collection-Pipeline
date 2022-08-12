@@ -1,4 +1,5 @@
 import unittest
+import os
 import pathlib as pl
 from setuptools import setup
 from unittest import TestCase
@@ -35,11 +36,11 @@ class TestIkeaScraper(TestCase):
         
 
     def assertIsFile(self, path):
-        if not pl.Path(path).resolve().is_file():
-            raise AssertionError("File does not exist: %s" % str(path))
-    
-    @patch('ikeascraper.Scrape._createFolder("./raw_data/")')
-    def test_make_pdtfiles(self, mock_file: Mock):
+        if not os.path.exists(path) :
+            raise AssertionError("File does not exist: %s" % str(path))  
+        else: print(f"{str(path)} exists") 
+
+    def test_make_pdtfiles(self):
         product_links = [
             'https://www.ikea.com/gb/en/p/kleppstad-wardrobe-with-2-doors-white-80437234/',
             'https://www.ikea.com/gb/en/p/vihals-storage-unit-white-90483268/',
@@ -47,11 +48,10 @@ class TestIkeaScraper(TestCase):
              ]
         dictionary_list = self.obj_scraper.make_pdtfiles('./raw_data/', product_links)
         self.assertIsInstance(dictionary_list, list) # list returned is in format 'list'
-        self.assertEqual(len(dictionary_list), 3) # number of items returned are 3
-        mock_file             
-        path = pl.Path('./raw_data/') #test if raw_data file is created/exists
+        self.assertEqual(len(dictionary_list), 3) # number of items returned are 3                    
+        path = './raw_data/' #test if raw_data file is created/exists
         self.assertIsFile(path)
-        path1 = pl.Path('./raw_data/ikeadata.json')
+        path1 = './raw_data/ikeadata.json' #test if json file for list of dictionaries is created/exists
         self.assertIsFile(path1)
         
 

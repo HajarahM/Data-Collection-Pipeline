@@ -156,7 +156,12 @@ def test_get_links(self):
 Lastly I tested the make_pdtfiles method which is supposed to save all scapeed data and files locally. To take a quick test, I passed only 3 product links directly into the product list in the test and checked with the created list of dictionaries would contain all the 3 dictionaries and was in 'list' format. 
 Next, I checked if the raw_data file was created along with the json file. Sample code below;
 ```python
-def test_make_pdtfiles(self, mock_file: Mock):
+def assertIsFile(self, path):
+        if not os.path.exists(path) :
+            raise AssertionError("File does not exist: %s" % str(path))  
+        else: print(f"{str(path)} exists") 
+
+def test_make_pdtfiles(self):
         product_links = [
             'https://www.ikea.com/gb/en/p/kleppstad-wardrobe-with-2-doors-white-80437234/',
             'https://www.ikea.com/gb/en/p/vihals-storage-unit-white-90483268/',
@@ -164,10 +169,9 @@ def test_make_pdtfiles(self, mock_file: Mock):
              ]
         dictionary_list = self.obj_scraper.make_pdtfiles('./raw_data/', product_links)
         self.assertIsInstance(dictionary_list, list) # list returned is in format 'list'
-        self.assertEqual(len(dictionary_list), 3) # number of items returned are 3
-        mock_file             
-        path = pl.Path('./raw_data/') #test if raw_data file is created/exists
+        self.assertEqual(len(dictionary_list), 3) # number of items returned are 3                    
+        path = './raw_data/' #test if raw_data file is created/exists
         self.assertIsFile(path)
-        path1 = pl.Path('./raw_data/ikeadata.json')
+        path1 = './raw_data/ikeadata.json' #test if json file for list of dictionaries is created/exists
         self.assertIsFile(path1)
 ```
