@@ -24,12 +24,11 @@ class Scrape:
         """
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        # self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
+        self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
         self.driver = webdriver.Chrome(options=self.options)
         self.homepage = "https://www.ikea.com"
         self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
-        self.productname = productname 
-        self.links = []
+        self.productname = productname         
         self.ikea_db_dict = [] # database of dictionaries     
 
     def _createFolder(self, directory):
@@ -117,7 +116,7 @@ class Scrape:
         
         Returns
         -------
-        self.links[]: list, A list of links to each of the product pages
+        links[]: list, A list of links to each of the product pages
         """
         self._accept_cookies()
         self.driver.get(self._search_product())
@@ -125,25 +124,25 @@ class Scrape:
         time.sleep(7)
         self._scroll_down()
         print("Fetching links...")        
-        self.links = []
+        links = []
         product_list = self.driver.find_elements(by=By.XPATH, value='//*[@class="serp-grid__item search-grid__item product-fragment"]')
         for item in product_list:
             # get links
             a_tag = item.find_element(by=By.XPATH, value='.//a')
             link = a_tag.get_attribute('href')
-            self.links.append(link)                          
-        print(f'The top {len(self.links)} items of {self.productname} have been found')
-        return (self.links)
+            links.append(link)                          
+        print(f'The top {len(links)} items of {self.productname} have been found')
+        return links
                
     def __get_pdtrefid(self, link): #get pdt number from website
         """ 
         Description
         -----------
-        Obtain Product Reference ID (pdtrefid) from the link that has been fetched and saved into the 'self.links' list
+        Obtain Product Reference ID (pdtrefid) from the link that has been fetched and saved into the 'links' list
         
         Parameters
         ----------
-        link: str, product link url from the 'self.links' list
+        link: str, product link url from the 'links' list
                
         Returns
         -------
@@ -160,7 +159,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: str, product link url from the 'self.links' list
+        link: str, product link url from the 'links' list
         pdtrefid: int, the product id returned by the "get_pdtrefid()" function        
         """ 
         pdtrefid = self.__get_pdtrefid(link)
@@ -174,7 +173,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: str, product link url from the 'self.links' list to product page        
+        link: str, product link url from the 'links' list to product page        
         brand: str, brand of the product
         pdtdescription: str, brief description of the product
         pdtprice: int, Price of product in '£'
@@ -196,7 +195,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: str: product link url from the 'self.links' list to product page
+        link: str: product link url from the 'links' list to product page
                 
         Returns
         -------
@@ -215,7 +214,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the 'self.links' list to product page
+        link: product link url from the 'links' list to product page
         get_image_source(): method/function that returns the image url
                 
         Returns
@@ -234,7 +233,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: str, product link url from the 'self.links' list to product page
+        link: str, product link url from the 'links' list to product page
         
         Returns
         -------
@@ -264,7 +263,7 @@ class Scrape:
         
         Parameters
         ----------
-        link: product link url from the 'self.links' list      
+        link: product link url from the 'links' list      
         """ 
         #save image         
         retrieved_image=self.__download_image(link)  
@@ -282,19 +281,20 @@ class Scrape:
         with open(f'./raw_data/ikeadata.json', 'w') as data:
             json.dump(self.ikea_db_dict, data, indent=4)                
 
-    def make_pdtfiles(self): 
+    def make_pdtfiles(self, directory, product_links): 
         """ 
         Description
         -----------
         Main method that puts all steps together to make/compile product files by creating the main folder(raw-data)
-        and looping through each link in the 'self.links' list and performing the respective actions below for each link.       
+        and looping through each link in the 'links' list and performing the respective actions below for each link.       
         """
         print("Saving data into files ...")
-        self._createFolder('./raw_data/') 
-        for link in self.links:
+        self._createFolder(directory)         
+        for link in product_links:
             self.__create_pdtfolder(link)
             self._get_data(link)            
-            self._save_locally(link)      
+            self._save_locally(link)   
+        return self.ikea_db_dict   
     
     def fetch(self):
         """ 
@@ -310,8 +310,8 @@ class Scrape:
         """           
         start_time = time.time()        
         self.launch_homepage()      
-        self.get_links()
-        self.make_pdtfiles()    
+        product_links=self.get_links()
+        self.make_pdtfiles('./raw_data/', product_links)    
         self.stop_running()
         print("Your product files have been saved in the raw-data folder")
         print(f"It took ", (time.time() - start_time), " seconds to scrape the best-matched products of your search")
@@ -325,9 +325,8 @@ class Scrape:
         self.driver.close()
         self.driver.quit()   
        
-bot = Scrape('chair')
-
 if __name__ == "__main__":
+    bot = Scrape('chair')
     bot.fetch()
 
 # print(inspect.getdoc())

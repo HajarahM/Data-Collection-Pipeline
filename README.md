@@ -38,7 +38,7 @@ self.driver.get(self.producttypeurl)
         links.append(item.find_element(by=By.XPATH, value='.//a').get_attribute('href'))
     print(f'{len(links)} product links stored in {self.productname} list')        
 ```
-#### Milestone 2 & 3: Collect Data & Images from the individual pages and save locally
+#### Milestone 2 - 4: Collect Data & Images from the individual pages and save locally
 I created multiple methods to navigate through the site and perform different functionalities, these include;
 
 ##### Retrieve text and image data from a single details page
@@ -112,4 +112,62 @@ def save_locally(self, link):
         #create and save into data.json file
         with open(f'./raw_data/{pdtrefid}/data.json', 'w') as data:
             json.dump(self.pdt_dict, data, indent=4) 
+```
+#### Milestone 5: Documentation and Testing
+
+##### Documentation
+After successfully testing the functionality of the Scraper, I then moved onto documentation. I used the NumPy Docstring format, adding docstrings to all the methods, easy enough for other users to understand.
+
+##### Unit Testing
+Next I created unit test functions for the 3 public methods that make up the main functionality of the Scraper.
+###### Launch_homepage
+First I tested the launch_homepage method - the unittest checks for the following functionality with respective sample code;
+ - if driver.get is called twice
+ - if the find_element function is returning the specified xpath for the go-shopping button
+ - and if time.sleep is called twice, first for 0.5seconds and next for 1sec
+```python
+ @patch('selenium.webdriver.remote.webdriver.WebDriver.get')
+    @patch('selenium.webdriver.remote.webdriver.WebDriver.find_element')
+    @patch('time.sleep')
+    def test_launch_homepage(self, 
+        mock_sleep: Mock,
+        mock_find_element: Mock,
+        mock_get: Mock
+        ):
+
+        self.obj_scraper.launch_homepage()
+        # check if 'find_element' function is called with xpath
+        mock_get.assert_called
+        get_call_count = mock_get.call_count
+        mock_find_element.assert_called_once_with(by='xpath', value='.//*[@class="website-link svelte-bdk5aj"]') # test if go-shopping button found
+        mock_sleep.assert_has_calls(calls=[call(0.5), call(1)], any_order=True) # test sleep times called twice
+        self.assertEqual(get_call_count, 2) # get_call called twice   
+```
+###### get_links
+Next I tested the 'get_links' method to check whether the specified number of links on the page is returned and whether the returned object is in 'list' format
+```python
+def test_get_links(self):
+        self.obj_scraper.launch_homepage()
+        result_links = self.obj_scraper.get_links()        
+        self.assertIsInstance(result_links, list) # list returned is in format 'list'
+        self.assertEqual(len(result_links), 22) # number of items returned are 22
+```
+###### make_pdtfiles (Make Product Files)
+Lastly I tested the make_pdtfiles method which is supposed to save all scapeed data and files locally. To take a quick test, I passed only 3 product links directly into the product list in the test and checked with the created list of dictionaries would contain all the 3 dictionaries and was in 'list' format. 
+Next, I checked if the raw_data file was created along with the json file. Sample code below;
+```python
+def test_make_pdtfiles(self, mock_file: Mock):
+        product_links = [
+            'https://www.ikea.com/gb/en/p/kleppstad-wardrobe-with-2-doors-white-80437234/',
+            'https://www.ikea.com/gb/en/p/vihals-storage-unit-white-90483268/',
+            'https://www.ikea.com/gb/en/p/songesand-wardrobe-white-90347351/'
+             ]
+        dictionary_list = self.obj_scraper.make_pdtfiles('./raw_data/', product_links)
+        self.assertIsInstance(dictionary_list, list) # list returned is in format 'list'
+        self.assertEqual(len(dictionary_list), 3) # number of items returned are 3
+        mock_file             
+        path = pl.Path('./raw_data/') #test if raw_data file is created/exists
+        self.assertIsFile(path)
+        path1 = pl.Path('./raw_data/ikeadata.json')
+        self.assertIsFile(path1)
 ```

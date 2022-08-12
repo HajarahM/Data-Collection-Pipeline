@@ -6,12 +6,12 @@ from unittest.mock import Mock, patch, call
 from ikeascraper import Scrape
 
 
-class TestIkeaScraper(TestCase):
+class TestIkeaScraper(TestCase):   
     def setUp(self):
         self.obj_scraper = Scrape('chair')
 
-    @patch('ikeascraper.Scrape.get')
-    @patch('ikeascraper.Scrape.find_element')
+    @patch('selenium.webdriver.remote.webdriver.WebDriver.get')
+    @patch('selenium.webdriver.remote.webdriver.WebDriver.find_element')
     @patch('time.sleep')
     def test_launch_homepage(self, 
         mock_sleep: Mock,
@@ -23,11 +23,10 @@ class TestIkeaScraper(TestCase):
         # check if 'find_element' function is called with xpath
         mock_get.assert_called
         get_call_count = mock_get.call_count
-        mock_find_element.assert_called_once_with(xpath='.//*[@class="website-link svelte-bdk5aj"]') # test if go-shopping button found
-        mock_sleep.assert_has_calls[call(0.5), call(1)] # test sleep times called twice
+        mock_find_element.assert_called_once_with(by='xpath', value='.//*[@class="website-link svelte-bdk5aj"]') # test if go-shopping button found
+        mock_sleep.assert_has_calls(calls=[call(0.5), call(1)], any_order=True) # test sleep times called twice
         self.assertEqual(get_call_count, 2) # get_call called twice     
                
-
     def test_get_links(self):
         self.obj_scraper.launch_homepage()
         result_links = self.obj_scraper.get_links()        
@@ -39,18 +38,26 @@ class TestIkeaScraper(TestCase):
         if not pl.Path(path).resolve().is_file():
             raise AssertionError("File does not exist: %s" % str(path))
     
-    @patch('ikeascraper.Scrape._createFolder()')
-    def test_make_pdtfiles(self,
-        mock_createfolder: Mock):
-        self.obj_scraper.make_pdtfiles()
-        mock_createfolder('./raw_data/')
+    @patch('ikeascraper.Scrape._createFolder("./raw_data/")')
+    def test_make_pdtfiles(self, mock_file: Mock):
+        product_links = [
+            'https://www.ikea.com/gb/en/p/kleppstad-wardrobe-with-2-doors-white-80437234/',
+            'https://www.ikea.com/gb/en/p/vihals-storage-unit-white-90483268/',
+            'https://www.ikea.com/gb/en/p/songesand-wardrobe-white-90347351/'
+             ]
+        dictionary_list = self.obj_scraper.make_pdtfiles('./raw_data/', product_links)
+        self.assertIsInstance(dictionary_list, list) # list returned is in format 'list'
+        self.assertEqual(len(dictionary_list), 3) # number of items returned are 3
+        mock_file             
         path = pl.Path('./raw_data/') #test if raw_data file is created/exists
         self.assertIsFile(path)
+        path1 = pl.Path('./raw_data/ikeadata.json')
+        self.assertIsFile(path1)
         
 
-    @patch('ikeascraper.Scrape.stoprunning')
-    def test_fetch(self): # all methods here have been tested separately
-        pass
+    # @patch('ikeascraper.Scrape.stoprunning')
+    # def test_fetch(self): # all methods here have been tested separately
+    #     pass
      
     def tearDown(self):
         self.obj_scraper.driver.quit()
