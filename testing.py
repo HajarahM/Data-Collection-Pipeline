@@ -1,6 +1,5 @@
 import unittest
 import os
-import pathlib as pl
 from setuptools import setup
 from unittest import TestCase
 from unittest.mock import Mock, patch, call
