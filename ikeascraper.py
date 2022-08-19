@@ -315,6 +315,7 @@ class Scrape:
         self.stop_running()
         print("Your product files have been saved in the raw-data folder")
         print(f"It took ", (time.time() - start_time), " seconds to scrape the best-matched products of your search")
+        return self.ikea_db_dict
 
     def stop_running(self):
         """ 
