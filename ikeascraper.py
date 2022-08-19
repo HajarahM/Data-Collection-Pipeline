@@ -294,7 +294,7 @@ class Scrape:
             self.__create_pdtfolder(link)
             self._get_data(link)            
             self._save_locally(link)   
-        return self.ikea_db_dict   
+        return self.ikea_db_dict        
     
     def fetch(self):
         """ 
