@@ -249,7 +249,13 @@ class Scrape:
         pdt_dict['Brand'].append(self.brand) 
         pdt_dict['Description'].append(self.pdtdescription)  
         pdt_dict['Price'].append(self.pdtprice)
-        pdt_dict['Imagelink'].append(image_link)    
+        pdt_dict['Imagelink'].append(image_link)  
+
+        # #convert lists in pdt_dict dictionary to 'str' type
+        # for list in pdt_dict:
+        #     map(str, list)
+        # # map(str,pdt_dict['SysUID'])
+        # # map(str,pdt_dict['ProductID'],pdt_dict['Link'],pdt_dict['Brand'],pdt_dict['Description'],pdt_dict['Price'],pdt_dict['Imagelink'])
         self.ikea_db_dict.append(pdt_dict)
 
         return pdt_dict                          
