@@ -10,7 +10,7 @@ engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.c
 
 data = pd.read_json('./raw_data/ikeadata.json') #Read the json file which will return a dictionary
 productsDB = pd.DataFrame(data) #Convert that dictionary into a dataframe
-# for dict in productsDB:
+productsDB = productsDB.applymap(str)
 #     productsDB = productsDB.append(json_normalize(dict))
 print(productsDB)   
 
