@@ -12,7 +12,9 @@ engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.c
 
 bot = Scrape('chair')
 product_db = bot.fetch()
-resultDf = pd.DataFrame(product_db)
+resultDf = pd.concat()
+for dict in product_db:
+    resultDf = resultDf(json_normalize(dict))
 print(resultDf)   
 
 #import list from ikeascraper
