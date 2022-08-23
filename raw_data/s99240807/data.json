@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55e4a85760a8f4019a2ff74094f"
-    ],
-    "ProductID": [
-        "s99240807"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/poaeng-armchair-oak-veneer-knisa-light-beige-s99240807/"
-    ],
-    "Brand": [
-        "PO\u00c4NG"
-    ],
-    "Description": [
-        "Armchair, oak veneer/Knisa light beige"
-    ],
-    "Price": [
-        "80"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/poaeng-armchair-oak-veneer-hillared-anthracite__0497180_pe629007_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb5f38547808a695f3812d3aaa26",
+    "ProductID": "s99240807",
+    "Link": "https://www.ikea.com/gb/en/p/poaeng-armchair-oak-veneer-knisa-light-beige-s99240807/",
+    "Brand": "PO\u00c4NG",
+    "Description": "Armchair, oak veneer/Knisa light beige",
+    "Price": "80",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/poaeng-armchair-oak-veneer-hillared-anthracite__0497180_pe629007_s5.jpg?f=xu"
 }

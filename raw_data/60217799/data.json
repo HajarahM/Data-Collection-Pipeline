@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55efea875179620688549c251a3"
-    ],
-    "ProductID": [
-        "60217799"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/gunde-folding-chair-white-60217799/"
-    ],
-    "Brand": [
-        "GUNDE"
-    ],
-    "Description": [
-        "Folding chair, white"
-    ],
-    "Price": [
-        "9"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/gunde-folding-chair-black__0728313_pe736184_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb5fc81575b785da040b4ee957ce",
+    "ProductID": "60217799",
+    "Link": "https://www.ikea.com/gb/en/p/gunde-folding-chair-white-60217799/",
+    "Brand": "GUNDE",
+    "Description": "Folding chair, white",
+    "Price": "9",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/gunde-folding-chair-black__0728313_pe736184_s5.jpg?f=xu"
 }

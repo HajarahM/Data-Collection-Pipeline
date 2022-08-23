@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55f93407bbe8351f4cd092fb303"
-    ],
-    "ProductID": [
-        "20477949"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/remsta-armchair-hakebo-beige-20477949/"
-    ],
-    "Brand": [
-        "REMSTA"
-    ],
-    "Description": [
-        "Armchair, Hakebo beige"
-    ],
-    "Price": [
-        "150"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/remsta-armchair-hakebo-beige__0908599_pe783322_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb604f887f4f8347c5f88fa09e6c",
+    "ProductID": "20477949",
+    "Link": "https://www.ikea.com/gb/en/p/remsta-armchair-hakebo-beige-20477949/",
+    "Brand": "REMSTA",
+    "Description": "Armchair, Hakebo beige",
+    "Price": "150",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/remsta-armchair-hakebo-beige__0908599_pe783322_s5.jpg?f=xu"
 }

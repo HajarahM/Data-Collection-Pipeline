@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55ec67f7ce7b5701ea35502d1f3"
-    ],
-    "ProductID": [
-        "s59444397"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/eldberget-malskaer-swivel-chair-beige-white-s59444397/"
-    ],
-    "Brand": [
-        "ELDBERGET / MALSK\u00c4R"
-    ],
-    "Description": [
-        "Swivel chair, beige/white"
-    ],
-    "Price": [
-        "40"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/eldberget-malskaer-swivel-chair-beige-black__0814556_pe772637_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb5f9d72799b8f540a2fb59890be",
+    "ProductID": "s59444397",
+    "Link": "https://www.ikea.com/gb/en/p/eldberget-malskaer-swivel-chair-beige-white-s59444397/",
+    "Brand": "ELDBERGET / MALSK\u00c4R",
+    "Description": "Swivel chair, beige/white",
+    "Price": "40",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/eldberget-malskaer-swivel-chair-beige-black__0814556_pe772637_s5.jpg?f=xu"
 }

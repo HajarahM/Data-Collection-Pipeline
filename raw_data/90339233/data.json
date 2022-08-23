@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55f7dc6726cbd062eb2b3c39709"
-    ],
-    "ProductID": [
-        "90339233"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/stefan-chair-white-90339233/"
-    ],
-    "Brand": [
-        "STEFAN"
-    ],
-    "Description": [
-        "Chair, white"
-    ],
-    "Price": [
-        "30"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/stefan-chair-brown-black__0727320_pe735593_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb6037357ed1add7cc74cef2cec2",
+    "ProductID": "90339233",
+    "Link": "https://www.ikea.com/gb/en/p/stefan-chair-white-90339233/",
+    "Brand": "STEFAN",
+    "Description": "Chair, white",
+    "Price": "30",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/stefan-chair-brown-black__0727320_pe735593_s5.jpg?f=xu"
 }

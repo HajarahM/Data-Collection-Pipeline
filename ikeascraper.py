@@ -239,23 +239,18 @@ class Scrape:
         -------
         pdt_dict[]: list, updated product dictionary list
         """
-        pdt_dict = {'SysUID': [], 'ProductID': [], 'Link': [], 'Brand': [], 'Description': [], 'Price': [], 'Imagelink': []}
+        pdt_dict = {'SysUID': "", 'ProductID': "", 'Link': "", 'Brand': "", 'Description': "", 'Price': "", 'Imagelink': ""}
         uuid = uuid6.uuid7().hex # generate UUID (unique universal ID)
         image_link = self.__get_image_source(link) 
         pdtrefid = self.__get_pdtrefid(link)
-        pdt_dict['SysUID'].append(uuid) 
-        pdt_dict['ProductID'].append(pdtrefid)             
-        pdt_dict['Link'].append(link) 
-        pdt_dict['Brand'].append(self.brand) 
-        pdt_dict['Description'].append(self.pdtdescription)  
-        pdt_dict['Price'].append(self.pdtprice)
-        pdt_dict['Imagelink'].append(image_link)  
+        pdt_dict['SysUID'] = uuid 
+        pdt_dict['ProductID'] = pdtrefid       
+        pdt_dict['Link'] = link 
+        pdt_dict['Brand'] = self.brand
+        pdt_dict['Description'] = self.pdtdescription
+        pdt_dict['Price'] = self.pdtprice
+        pdt_dict['Imagelink'] = image_link
 
-        # #convert lists in pdt_dict dictionary to 'str' type
-        # for list in pdt_dict:
-        #     map(str, list)
-        # # map(str,pdt_dict['SysUID'])
-        # # map(str,pdt_dict['ProductID'],pdt_dict['Link'],pdt_dict['Brand'],pdt_dict['Description'],pdt_dict['Price'],pdt_dict['Imagelink'])
         self.ikea_db_dict.append(pdt_dict)
 
         return pdt_dict                          

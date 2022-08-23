@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55fe2437e4093934cfed9abaf83"
-    ],
-    "ProductID": [
-        "80222441"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/terje-folding-chair-white-80222441/"
-    ],
-    "Brand": [
-        "TERJE"
-    ],
-    "Description": [
-        "Folding chair, white"
-    ],
-    "Price": [
-        "19"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/terje-folding-chair-black__0727321_pe735619_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb6096e27d91b474a082fa5909ae",
+    "ProductID": "80222441",
+    "Link": "https://www.ikea.com/gb/en/p/terje-folding-chair-white-80222441/",
+    "Brand": "TERJE",
+    "Description": "Folding chair, white",
+    "Price": "19",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/terje-folding-chair-black__0727321_pe735619_s5.jpg?f=xu"
 }

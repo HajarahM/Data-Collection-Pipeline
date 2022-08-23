@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55fc9ce77ce9c29d1bc1c3f1ecf"
-    ],
-    "ProductID": [
-        "90350937"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/teodores-chair-white-90350937/"
-    ],
-    "Brand": [
-        "TEODORES"
-    ],
-    "Description": [
-        "Chair, white"
-    ],
-    "Price": [
-        "30"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/teodores-chair-black__1114240_pe871696_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb6078ac791a8db27f522876f022",
+    "ProductID": "90350937",
+    "Link": "https://www.ikea.com/gb/en/p/teodores-chair-white-90350937/",
+    "Brand": "TEODORES",
+    "Description": "Chair, white",
+    "Price": "30",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/teodores-chair-black__1114240_pe871696_s5.jpg?f=xu"
 }

@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55f624e7e4f9d84d2073f6587b6"
-    ],
-    "ProductID": [
-        "s19240830"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/poaeng-armchair-black-brown-knisa-black-s19240830/"
-    ],
-    "Brand": [
-        "PO\u00c4NG"
-    ],
-    "Description": [
-        "Armchair, black-brown/Knisa black"
-    ],
-    "Price": [
-        "80"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/poaeng-armchair-black-brown-hillared-anthracite__0497135_pe628962_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb60220d7f0fbe74998f768d6f89",
+    "ProductID": "s19240830",
+    "Link": "https://www.ikea.com/gb/en/p/poaeng-armchair-black-brown-knisa-black-s19240830/",
+    "Brand": "PO\u00c4NG",
+    "Description": "Armchair, black-brown/Knisa black",
+    "Price": "80",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/poaeng-armchair-black-brown-hillared-anthracite__0497135_pe628962_s5.jpg?f=xu"
 }

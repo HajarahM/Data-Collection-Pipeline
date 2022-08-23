@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55f30fc7df3adba6b4c43bbd91d"
-    ],
-    "ProductID": [
-        "90078462"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/pello-armchair-holmby-natural-90078462/"
-    ],
-    "Brand": [
-        "PELLO"
-    ],
-    "Description": [
-        "Armchair, Holmby natural"
-    ],
-    "Price": [
-        "75"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/pello-armchair-holmby-natural__38296_pe130209_s5.jpg?f=s"
-    ]
+    "SysUID": "0182cb5ff0ca7b03918868d2c4ffba87",
+    "ProductID": "90078462",
+    "Link": "https://www.ikea.com/gb/en/p/pello-armchair-holmby-natural-90078462/",
+    "Brand": "PELLO",
+    "Description": "Armchair, Holmby natural",
+    "Price": "75",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/pello-armchair-holmby-natural__38296_pe130209_s5.jpg?f=s"
 }

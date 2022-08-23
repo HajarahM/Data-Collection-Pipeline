@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55ffaf77effa5d4f574577aebed"
-    ],
-    "ProductID": [
-        "50058376"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/agen-chair-rattan-bamboo-50058376/"
-    ],
-    "Brand": [
-        "AGEN"
-    ],
-    "Description": [
-        "Chair, rattan/bamboo"
-    ],
-    "Price": [
-        "70"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/agen-chair-rattan-bamboo__31428_pe120743_s5.jpg?f=s"
-    ]
+    "SysUID": "0182cb60b18a7c2b809941500cd0d0d5",
+    "ProductID": "50058376",
+    "Link": "https://www.ikea.com/gb/en/p/agen-chair-rattan-bamboo-50058376/",
+    "Brand": "AGEN",
+    "Description": "Chair, rattan/bamboo",
+    "Price": "70",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/agen-chair-rattan-bamboo__31428_pe120743_s5.jpg?f=s"
 }

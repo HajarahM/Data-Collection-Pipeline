@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55faf637a4b975af2f8a489d708"
-    ],
-    "ProductID": [
-        "s59337670"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/loberget-sibben-childrens-desk-chair-white-s59337670/"
-    ],
-    "Brand": [
-        "LOBERGET / SIBBEN"
-    ],
-    "Description": [
-        "Children's desk chair, white"
-    ],
-    "Price": [
-        "19"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/loberget-sibben-childrens-desk-chair-white__0826517_pe776395_s5.jpg?f=s"
-    ]
+    "SysUID": "0182cb6063b8712b80bfff1449fad801",
+    "ProductID": "s59337670",
+    "Link": "https://www.ikea.com/gb/en/p/loberget-sibben-childrens-desk-chair-white-s59337670/",
+    "Brand": "LOBERGET / SIBBEN",
+    "Description": "Children's desk chair, white",
+    "Price": "19",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/loberget-sibben-childrens-desk-chair-white__0826517_pe776395_s5.jpg?f=s"
 }

@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55ead4278f4a1dd0a0812e230f3"
-    ],
-    "ProductID": [
-        "s49228474"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/fanbyn-chair-white-in-outdoor-s49228474/"
-    ],
-    "Brand": [
-        "FANBYN"
-    ],
-    "Description": [
-        "Chair, white/in/outdoor"
-    ],
-    "Price": [
-        "65"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/fanbyn-chair-grey-in-outdoor__0747677_pe744683_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb5f89ce79c9875a193b2331ebde",
+    "ProductID": "s49228474",
+    "Link": "https://www.ikea.com/gb/en/p/fanbyn-chair-white-in-outdoor-s49228474/",
+    "Brand": "FANBYN",
+    "Description": "Chair, white/in/outdoor",
+    "Price": "65",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/fanbyn-chair-grey-in-outdoor__0747677_pe744683_s5.jpg?f=xu"
 }

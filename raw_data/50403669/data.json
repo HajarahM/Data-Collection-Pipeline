@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c55f19b774be9dba525a84d8fdac"
-    ],
-    "ProductID": [
-        "50403669"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/stein-chair-transparent-50403669/"
-    ],
-    "Brand": [
-        "STEIN"
-    ],
-    "Description": [
-        "Chair, transparent"
-    ],
-    "Price": [
-        "65"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/stein-chair-transparent__0773405_pe756294_s5.jpg?f=xu"
-    ]
+    "SysUID": "0182cb5fdcd976ae852ce01a1aa9cecc",
+    "ProductID": "50403669",
+    "Link": "https://www.ikea.com/gb/en/p/stein-chair-transparent-50403669/",
+    "Brand": "STEIN",
+    "Description": "Chair, transparent",
+    "Price": "65",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/stein-chair-transparent__0773405_pe756294_s5.jpg?f=xu"
 }

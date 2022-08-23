@@ -1,23 +1,9 @@
 {
-    "SysUID": [
-        "0182c56067637f1cab02fa872801451f"
-    ],
-    "ProductID": [
-        "70434311"
-    ],
-    "Link": [
-        "https://www.ikea.com/gb/en/p/buskbo-armchair-rattan-70434311/"
-    ],
-    "Brand": [
-        "BUSKBO"
-    ],
-    "Description": [
-        "Armchair, rattan"
-    ],
-    "Price": [
-        "165"
-    ],
-    "Imagelink": [
-        "https://www.ikea.com/gb/en/images/products/buskbo-armchair-rattan__0679296_pe719536_s5.jpg?f=s"
-    ]
+    "SysUID": "0182cb6118f07c3eaac2233379145b19",
+    "ProductID": "70434311",
+    "Link": "https://www.ikea.com/gb/en/p/buskbo-armchair-rattan-70434311/",
+    "Brand": "BUSKBO",
+    "Description": "Armchair, rattan",
+    "Price": "165",
+    "Imagelink": "https://www.ikea.com/gb/en/images/products/buskbo-armchair-rattan__0679296_pe719536_s5.jpg?f=s"
 }
