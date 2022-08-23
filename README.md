@@ -88,14 +88,14 @@ Sample code below
 def update_pdt_dict(self, link):
         uuid = self.generate_UUID()
         image_link = self.get_image_source(link) 
-        pdtrefid = self.get_pdtrefid(link)
-        self.pdt_dict['SysUID'].append(uuid) 
-        self.pdt_dict['ProductID'].append(pdtrefid)             
-        self.pdt_dict['Link'].append(link) 
-        self.pdt_dict['Brand'].append(self.brand) 
-        self.pdt_dict['Description'].append(self.pdtdescription)  
-        self.pdt_dict['Price'].append(self.pdtprice)
-        self.pdt_dict['Imagelink'].append(image_link) 
+        pdtrefid = self.get_pdtrefid(link)        
+        pdt_dict['SysUID'] = uuid 
+        pdt_dict['ProductID'] = pdtrefid       
+        pdt_dict['Link'] = link 
+        pdt_dict['Brand'] = self.brand
+        pdt_dict['Description'] = self.pdtdescription
+        pdt_dict['Price'] = self.pdtprice
+        pdt_dict['Imagelink'] = image_link
 ```
 ##### Saving raw data and images locally
 Finally I wrote a method to product folders within a main raw-data folder, saved using the product ID previously obtained from the website. Within the product folder is the product dictionary as a .json file with respective data and a subfolder for image/s.
@@ -174,4 +174,43 @@ def test_make_pdtfiles(self):
         self.assertIsFile(path)
         path1 = './raw_data/ikeadata.json' #test if json file for list of dictionaries is created/exists
         self.assertIsFile(path1)
+```
+#### Milestone 6: Scalably Store the Data
+To scalably store the data, first in AWS console, I created an S3 bucket "ikeascraper" and in RDS created a database "ikeascraper" both of which I wrote scripts to create connections and to; 
+        1. Upload the raw_data folder including product images to S3 (using boto3)
+        sample code below;
+```python
+        def upload_files(path):
+                s3 = boto3.resource('s3')
+                bucket = s3.Bucket('ikeascraper')
+                
+                for subdir, dirs, files in os.walk(path):
+                        for file in files:
+                        full_path = os.path.join(subdir, file)
+                        with open(full_path, 'rb') as data:
+                                bucket.put_object(Key=full_path, Body=data)
+                
+                print('upload complete')
+                
+                if __name__ == "__main__":
+                upload_files('raw_data/')
+```
+        2. Upload the products database file ikeadata.json to RDS
+```python
+        from sqlalchemy import create_engine
+        from sqlalchemy import inspect
+        import pandas as pd
+
+        # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
+        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+
+        jsonfile = pd.read_json('./raw_data/ikeadata.json') #Read the json file which will return a dictionary
+        productsDB = pd.DataFrame(jsonfile) #Convert that dictionary into a dataframe
+
+        print(productsDB)   
+
+        #import list from ikeascraper
+        productsDB.to_sql('productsDB', engine, if_exists='append') # Use the to_sql method with pandas
+
+        inspect(engine).get_table_names()
 ```
