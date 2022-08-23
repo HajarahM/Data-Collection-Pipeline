@@ -1,8 +1,6 @@
 import json
-from multiprocessing.sharedctypes import Value
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
-from pandas import json_normalize
 import pandas as pd
 
 # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
