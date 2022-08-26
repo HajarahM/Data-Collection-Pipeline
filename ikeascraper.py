@@ -1,15 +1,20 @@
+from operator import index
 import time
 import requests
 import uuid6
 import os
 import json
 import inspect
+import boto3
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from sqlalchemy import create_engine
+from sqlalchemy import inspect
 
 class Scrape:
     def __init__(self, productname):
@@ -239,11 +244,11 @@ class Scrape:
         -------
         pdt_dict[]: list, updated product dictionary list
         """
-        pdt_dict = {'SysUID': "", 'ProductID': "", 'Link': "", 'Brand': "", 'Description': "", 'Price': "", 'Imagelink': ""}
+        pdt_dict = {'ProductID': "", 'Link': "", 'Brand': "", 'Description': "", 'Price': "", 'Imagelink': ""}
         uuid = uuid6.uuid7().hex # generate UUID (unique universal ID)
         image_link = self.__get_image_source(link) 
         pdtrefid = self.__get_pdtrefid(link)
-        pdt_dict['SysUID'] = uuid 
+        # pdt_dict['SysUID'] = uuid 
         pdt_dict['ProductID'] = pdtrefid       
         pdt_dict['Link'] = link 
         pdt_dict['Brand'] = self.brand
@@ -326,9 +331,48 @@ class Scrape:
         """
         self.driver.close()
         self.driver.quit()   
+
+class AWSConnect:
+    def __init__(self) -> None:
+        pass
+
+    def upload_files(self, path):
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket('ikeascraper')
+    
+        for subdir, dirs, files in os.walk(path):
+            for file in files:
+                full_path = os.path.join(subdir, file)
+                with open(full_path, 'rb') as data:
+                    bucket.put_object(Key=full_path, Body=data)
+        
+        print('upload complete')
+
+    def update_database(self):
+        # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
+        # Retrieve existing data
+        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+        old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
+
+        # Retrieve all new data
+        jsonfile = pd.read_json('./raw_data/ikeadata.json') #Read the json file which will return a dictionary
+        new_products_info = pd.DataFrame(jsonfile) #Convert that dictionary into a dataframe
+
+        #check for and drop duplicates  
+        old_product_info = pd.read_sql_table('productsDB', con=engine)
+        merged_products = pd.concat([old_product_info, new_products_info])
+        new_unduplicated_products = merged_products.drop_duplicates(keep=False)
+        
+        #update database
+        new_unduplicated_products.to_sql('productsDB', engine, if_exists='append', index=False) # Use the to_sql method with pandas
+        print(new_unduplicated_products) 
+        inspect(engine).get_table_names()
        
 if __name__ == "__main__":
     bot = Scrape('chair')
+    aws = AWSConnect()
     bot.fetch()
+    aws.upload_files('raw_data/')
+    aws.update_database()
 
 # print(inspect.getdoc())
