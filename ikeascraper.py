@@ -98,14 +98,18 @@ class Scrape:
         print (producttypeurl)
         return producttypeurl
 
-    def _scroll_down(self):
+    def _scroll_down_showmore(self):
         """ 
         Description
         -----------
         Scroll down to the bottom of the page that has been opened and waits for 2 seconds for loading of data and images on the page.        
         """
-        self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-        time.sleep(2)
+        show_more_location = self.driver.find_elements(by=By.XPATH, value='//a[@class="load-more-anchor"]')
+        for show_more in show_more_location:
+            self.driver.execute_script("arguments[0].scrollIntoView();", show_more)
+            show_more_button = self.driver.find_element(by=By.XPATH, value='//a[@href="#load-more-24-products"]')
+            show_more_button.click()
+            time.sleep(0.5)
     
     def get_links(self):
         """ 
@@ -125,9 +129,9 @@ class Scrape:
         """
         self._accept_cookies()
         self.driver.get(self._search_product())
-        print("Loading all images...")        
+        print("Loading all images...")               
+        self._scroll_down_showmore()
         time.sleep(7)
-        self._scroll_down()
         print("Fetching links...")        
         links = []
         product_list = self.driver.find_elements(by=By.XPATH, value='//*[@class="serp-grid__item search-grid__item product-fragment"]')
