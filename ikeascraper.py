@@ -1,3 +1,4 @@
+from genericpath import exists
 from operator import index
 import time
 import requests
@@ -29,7 +30,7 @@ class Scrape:
         """
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
+        # self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
         self.driver = webdriver.Chrome(options=self.options)
         self.homepage = "https://www.ikea.com"
         self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
@@ -98,16 +99,16 @@ class Scrape:
         print (producttypeurl)
         return producttypeurl
 
-    def _scroll_down_showmore(self):
+    def _scroll_down_showmore(self, result_pages):
         """ 
         Description
         -----------
         Scroll down to the bottom of the page that has been opened and waits for 2 seconds for loading of data and images on the page.        
-        """
-        show_more_location = self.driver.find_elements(by=By.XPATH, value='//a[@class="load-more-anchor"]')
-        for show_more in show_more_location:
-            self.driver.execute_script("arguments[0].scrollIntoView();", show_more)
-            show_more_button = self.driver.find_element(by=By.XPATH, value='//a[@href="#load-more-24-products"]')
+        """            
+        for i in range(result_pages):
+            show_more = self.driver.find_element(by=By.XPATH, value='//a[@class="load-more-anchor"]')
+            show_more.location_once_scrolled_into_view
+            show_more_button = self.driver.find_element(by=By.XPATH, value='//a[@class="show-more__button button button--secondary button--small"]')
             show_more_button.click()
             time.sleep(0.5)
     
@@ -127,10 +128,14 @@ class Scrape:
         -------
         links[]: list, A list of links to each of the product pages
         """
+        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+        old_links = engine.execute('''SELECT "Link" FROM public."productsDB"''').all()
+        # old_product_info = pd.read_sql_table('productsDB', con=engine)
+        
         self._accept_cookies()
         self.driver.get(self._search_product())
         print("Loading all images...")               
-        self._scroll_down_showmore()
+        self._scroll_down_showmore(3)
         time.sleep(7)
         print("Fetching links...")        
         links = []
@@ -139,8 +144,13 @@ class Scrape:
             # get links
             a_tag = item.find_element(by=By.XPATH, value='.//a')
             link = a_tag.get_attribute('href')
-            links.append(link)                          
-        print(f'The top {len(links)} items of {self.productname} have been found')
+            
+            if link in old_links:
+                pass
+            else:
+                links.append(link)
+                                
+        print(f'The top {len(links)} items of {self.productname} have been found')        
         return links
                
     def __get_pdtrefid(self, link): #get pdt number from website
@@ -375,6 +385,7 @@ class AWSConnect:
 if __name__ == "__main__":
     bot = Scrape('chair')
     aws = AWSConnect()
+    
     bot.fetch()
     aws.upload_files('raw_data/')
     aws.update_database()
