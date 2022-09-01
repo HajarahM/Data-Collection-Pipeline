@@ -1,5 +1,3 @@
-from genericpath import exists
-from operator import index
 import time
 import requests
 import uuid6
@@ -30,7 +28,7 @@ class Scrape:
         """
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        # self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
+        self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
         self.driver = webdriver.Chrome(options=self.options)
         self.homepage = "https://www.ikea.com"
         self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
@@ -103,39 +101,43 @@ class Scrape:
         """ 
         Description
         -----------
-        Scroll down to the bottom of the page that has been opened and waits for 2 seconds for loading of data and images on the page.        
+        Scroll down until you find the "show-more" button, click on it to display more products, wait 0.5sec and repeat number of time specified as "result_pages" passed into this method.
+        
+        Parameters
+        ----------
+        result_pages: int, number of pages of the search results that you want to scrape     
         """            
-        for i in range(result_pages):
+        for page in range(result_pages):
             show_more = self.driver.find_element(by=By.XPATH, value='//a[@class="load-more-anchor"]')
             show_more.location_once_scrolled_into_view
             show_more_button = self.driver.find_element(by=By.XPATH, value='//a[@class="show-more__button button button--secondary button--small"]')
             show_more_button.click()
             time.sleep(0.5)
     
-    def get_links(self):
+    def get_list_of_links(self, number_of_pages):
         """ 
         Description
         -----------
-        Method to get all the links of the products listed on the specified product-type page (producttypeurl).
+        Method to get all the links of the products in the search result, compare to currently existing links in the database and only scrape new links that don't currently exist.
         
         Parameters
         ----------
         producttypeurl, srt: url to the list of products that have been searched
         productid: str, XPATH of container identifier used by website common to each product
         productname: str, name of product specified when this class is called - named in the __init__ method
-        
+        number_of_pages: int, number of pages of the search results to be scraped
+
         Returns
         -------
         links[]: list, A list of links to each of the product pages
         """
         engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
         old_links = engine.execute('''SELECT "Link" FROM public."productsDB"''').all()
-        # old_product_info = pd.read_sql_table('productsDB', con=engine)
-        
+                
         self._accept_cookies()
         self.driver.get(self._search_product())
         print("Loading all images...")               
-        self._scroll_down_showmore(3)
+        self._scroll_down_showmore(number_of_pages)
         time.sleep(7)
         print("Fetching links...")        
         links = []
@@ -153,7 +155,7 @@ class Scrape:
         print(f'The top {len(links)} items of {self.productname} have been found')        
         return links
                
-    def __get_pdtrefid(self, link): #get pdt number from website
+    def __get_product_reference_id(self, link): #get pdt number from website
         """ 
         Description
         -----------
@@ -170,18 +172,18 @@ class Scrape:
         pdtrefid = link[link.rindex('-')+1:].strip('/')   
         return pdtrefid
 
-    def __create_pdtfolder(self, link):   # create folder with pdt number      
+    def __create_product_folder(self, link):   # create folder with pdt number      
         """ 
         Description
         -----------
-        Uses the "createFolder()" function to create the individual product folders named with the product number obtained from the "get_pdtrefid" function for specified link
+        Uses the "createFolder()" function to create the individual product folders named with the product number obtained from the "get_product_reference_id" function for specified link
         
         Parameters
         ----------
         link: str, product link url from the 'links' list
-        pdtrefid: int, the product id returned by the "get_pdtrefid()" function        
+        pdtrefid: int, the product id returned by the "get_product_reference_id()" function        
         """ 
-        pdtrefid = self.__get_pdtrefid(link)
+        pdtrefid = self.__get_product_reference_id(link)
         self._createFolder(f'./raw_data/{pdtrefid}/')    
     
     def _get_data(self, link): 
@@ -261,7 +263,7 @@ class Scrape:
         pdt_dict = {'ProductID': "", 'Link': "", 'Brand': "", 'Description': "", 'Price': "", 'Imagelink': ""}
         uuid = uuid6.uuid7().hex # generate UUID (unique universal ID)
         image_link = self.__get_image_source(link) 
-        pdtrefid = self.__get_pdtrefid(link)
+        pdtrefid = self.__get_product_reference_id(link)
         # pdt_dict['SysUID'] = uuid 
         pdt_dict['ProductID'] = pdtrefid       
         pdt_dict['Link'] = link 
@@ -287,7 +289,7 @@ class Scrape:
         """ 
         #save image         
         retrieved_image=self.__download_image(link)  
-        pdtrefid = self.__get_pdtrefid(link)
+        pdtrefid = self.__get_product_reference_id(link)
         self._createFolder(f'./raw_data/{pdtrefid}/images') 
         with open(f'./raw_data/{pdtrefid}/images/{pdtrefid}.jpg', 'wb') as outimage:
             outimage.write(retrieved_image)
@@ -301,7 +303,7 @@ class Scrape:
         with open(f'./raw_data/ikeadata.json', 'w') as data:
             json.dump(self.ikea_db_dict, data, indent=4)                
 
-    def make_pdtfiles(self, directory, product_links): 
+    def make_product_files(self, directory, product_links): 
         """ 
         Description
         -----------
@@ -311,12 +313,12 @@ class Scrape:
         print("Saving data into files ...")
         self._createFolder(directory)         
         for link in product_links:
-            self.__create_pdtfolder(link)
+            self.__create_product_folder(link)
             self._get_data(link)            
             self._save_locally(link)   
         return self.ikea_db_dict        
     
-    def fetch(self):
+    def fetch(self,number_of_pages):
         """ 
         Description
         -----------
@@ -325,16 +327,16 @@ class Scrape:
         Parameters
         ----------
         homepage: input of homepage url
-        productname: str
-                        name of product    
+        productname: str, name of product    
+        number_of_pages: int, number of pages of the search results to be scraped
         """           
         start_time = time.time()        
         self.launch_homepage()      
-        product_links=self.get_links()
-        self.make_pdtfiles('./raw_data/', product_links)    
+        product_links=self.get_list_of_links(number_of_pages)
+        self.make_product_files('./raw_data/', product_links)    
         self.stop_running()
         print("Your product files have been saved in the raw-data folder")
-        print(f"It took ", (time.time() - start_time), " seconds to scrape the best-matched products of your search")
+        print(f"It took ", (time.time() - start_time)/60, " minutes to scrape the best-matched products of your search")
         return self.ikea_db_dict
 
     def stop_running(self):
@@ -386,7 +388,7 @@ if __name__ == "__main__":
     bot = Scrape('chair')
     aws = AWSConnect()
     
-    bot.fetch()
+    bot.fetch(3)
     aws.upload_files('raw_data/')
     aws.update_database()
 
