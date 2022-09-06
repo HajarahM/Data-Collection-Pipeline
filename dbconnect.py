@@ -2,8 +2,9 @@ import json
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 import pandas as pd
+import json
 
-engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
 # old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
 # Retrieve all new data

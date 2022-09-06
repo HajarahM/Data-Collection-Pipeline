@@ -6,6 +6,7 @@ import json
 import inspect
 import boto3
 import pandas as pd
+import json
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
@@ -29,6 +30,10 @@ class Scrape:
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.options.add_argument("--headless") # comment out if you want to see the browser while scraping
+        self.options.add_argument("--no-sandbox")
+        self.options.add_argument("--disable-dev-shm-usage")
+        self.options.add_argument("--window-size=1920,1080")
+        self.options.add_argument("--start-maximized")
         self.driver = webdriver.Chrome(options=self.options)
         self.homepage = "https://www.ikea.com"
         self.acceptcookiesid = '//*[@id="onetrust-accept-btn-handler"]'
@@ -367,7 +372,7 @@ class AWSConnect:
     def update_database(self):
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
         # Retrieve existing data
-        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+        engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
         old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
         # Retrieve all new data
@@ -385,6 +390,12 @@ class AWSConnect:
         inspect(engine).get_table_names()
        
 if __name__ == "__main__":
+    with open ('credentials.json') as cred:
+        credentials = json.load(cred)
+    RDS_HOST = credentials['RDS_HOST']
+    RDS_PASSWORD = credentials['RDS_PASSWORD']
+    RDS_PORT = credentials['RDS_PORT']
+
     bot = Scrape('chair')
     aws = AWSConnect()
     
