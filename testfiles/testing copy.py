@@ -3,7 +3,7 @@ import json
 from setuptools import setup
 from unittest import TestCase
 from unittest.mock import Mock, patch, call
-from ikeascraper import Scrape
+from main import Scrape
 
 class TestIkeaScraper(TestCase):
     def setUp(self):

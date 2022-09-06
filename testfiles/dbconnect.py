@@ -2,7 +2,7 @@ import json
 from multiprocessing.sharedctypes import Value
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
-from ikeascraper import Scrape
+from main import Scrape
 from pandas import json_normalize
 import pandas as pd
 
