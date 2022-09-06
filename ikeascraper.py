@@ -388,7 +388,7 @@ if __name__ == "__main__":
     bot = Scrape('chair')
     aws = AWSConnect()
     
-    bot.fetch(3)
+    bot.fetch(1)
     aws.upload_files('raw_data/')
     aws.update_database()
 
