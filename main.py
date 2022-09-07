@@ -372,7 +372,7 @@ class AWSConnect:
     def update_database(self):
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
         # Retrieve existing data
-        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+        engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
         old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
         # Retrieve all new data
@@ -392,11 +392,11 @@ class AWSConnect:
 if __name__ == "__main__":
     print('Starting...')
 
-    # with open ('credentials.json') as cred:
-    #     credentials = json.load(cred)
-    # RDS_HOST = credentials['RDS_HOST']
-    # RDS_PASSWORD = credentials['RDS_PASSWORD']
-    # RDS_PORT = credentials['RDS_PORT']
+    with open ('credentials.json') as cred:
+        credentials = json.load(cred)
+    RDS_HOST = credentials['RDS_HOST']
+    RDS_PASSWORD = credentials['RDS_PASSWORD']
+    RDS_PORT = credentials['RDS_PORT']
 
     bot = Scrape('chair')
     aws = AWSConnect()
