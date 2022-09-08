@@ -357,18 +357,6 @@ class AWSConnect:
     def __init__(self) -> None:
         pass
 
-    def upload_files(self, path):
-        s3 = boto3.resource('s3')
-        bucket = s3.Bucket('ikeascraper')
-    
-        for subdir, dirs, files in os.walk(path):
-            for file in files:
-                full_path = os.path.join(subdir, file)
-                with open(full_path, 'rb') as data:
-                    bucket.put_object(Key=full_path, Body=data)
-        
-        print('upload complete')
-
     def update_database(self):
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
         # Retrieve existing data
@@ -388,6 +376,18 @@ class AWSConnect:
         new_unduplicated_products.to_sql('productsDB', engine, if_exists='append', index=False) # Use the to_sql method with pandas
         print(new_unduplicated_products) 
         inspect(engine).get_table_names()
+
+    def upload_files(self, path):
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket('ikeascraper')
+    
+        for subdir, dirs, files in os.walk(path):
+            for file in files:
+                full_path = os.path.join(subdir, file)
+                with open(full_path, 'rb') as data:
+                    bucket.put_object(Key=full_path, Body=data)
+        
+        print('upload complete')
        
 if __name__ == "__main__":
     print('Starting...')
@@ -402,7 +402,8 @@ if __name__ == "__main__":
     aws = AWSConnect()
     
     bot.fetch(1)
-    aws.upload_files('raw_data/')
     aws.update_database()
+    aws.upload_files('raw_data/')
+    
 
 # print(inspect.getdoc())
