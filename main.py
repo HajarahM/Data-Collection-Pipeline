@@ -378,7 +378,9 @@ class AWSConnect:
         inspect(engine).get_table_names()
 
     def upload_files(self, path):
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource('s3',
+                aws_access_key_id={S3_ACCESS_KEY_ID},
+                aws_secret_access_key={S3_ACCESS_KEY})
         bucket = s3.Bucket('ikeascraper')
     
         for subdir, dirs, files in os.walk(path):
@@ -397,6 +399,8 @@ if __name__ == "__main__":
     RDS_HOST = credentials['RDS_HOST']
     RDS_PASSWORD = credentials['RDS_PASSWORD']
     RDS_PORT = credentials['RDS_PORT']
+    S3_ACCESS_KEY_ID = credentials['S3_ACCESS_KEY_ID']
+    S3_ACCESS_KEY = credentials['S3_ACCESS_KEY']
 
     bot = Scrape('chair')
     aws = AWSConnect()
