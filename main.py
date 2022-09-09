@@ -360,7 +360,7 @@ class AWSConnect:
     def update_database(self):
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
         # Retrieve existing data
-        engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
+        engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:5432/ikeascraper')
         old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
         # Retrieve all new data
