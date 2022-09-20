@@ -210,7 +210,7 @@ class Scrape:
         #extract all text per product page
         self.brand = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-header-section__title--big notranslate"]').text            
         self.pdtdescription = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-header-section__description-text"]').text                 
-        self.pdtprice = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__integer"]').text 
+        self.pdtprice = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price-module-price__integer"]').text 
         # self.currency = self.driver.find_element(by=By.XPATH, value='//span[@class="pip-price__currency-symbol pip-price__currency-symbol--leading \n\t pip-price__currency-symbol--superscript"]').text       
         
     def __get_image_source(self, link):
