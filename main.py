@@ -16,6 +16,8 @@ from selenium.webdriver.common.keys import Keys
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 
+from dbconnect import RDS_PASSWORD
+
 class Scrape:
     def __init__(self, productname):
         """
@@ -360,7 +362,7 @@ class AWSConnect:
     def update_database(self):
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
         # Retrieve existing data
-        engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:5432/ikeascraper')
+        engine = create_engine(f'postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
         old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
         # Retrieve all new data
@@ -392,20 +394,34 @@ class AWSConnect:
         print('upload complete')
        
 if __name__ == "__main__":
-    print('Starting...')
+    print('Starting the Scraper ...')
 
-    with open ('credentials.json') as cred:
-        credentials = json.load(cred)
-    RDS_HOST = credentials['RDS_HOST']
-    RDS_PASSWORD = credentials['RDS_PASSWORD']
-    RDS_PORT = credentials['RDS_PORT']
-    S3_ACCESS_KEY_ID = credentials['S3_ACCESS_KEY_ID']
-    S3_ACCESS_KEY = credentials['S3_ACCESS_KEY']
+    #inputs to be obtained from user
+    product_to_search = input("What product do you want to search for and scrape?")
+    number_of_pages = input("how many result pages do you want to scrape?")
+    print('I will need to save the table of scraped product details for you in a database.')
+    RDS_HOST = input("Enter your RDS Database host here")
+    RDS_PASSWORD = input("Enter you RDS Password here")
+    RDS_PORT = input ("Enter your RDS PORT here")
+    print('I will also need to save the product images to your s3 bucket')
+    S3_ACCESS_KEY_ID = input("Enter your S3 Access Key ID here (it will be saved locally)")
+    S3_ACCESS_KEY = input ("Enter your Access Key here")
 
-    bot = Scrape('chair')
+    #create user_input.json file
+    
+
+    # with open ('credentials.json') as cred:
+    #     credentials = json.load(cred)
+    # RDS_HOST = credentials['RDS_HOST']
+    # RDS_PASSWORD = credentials['RDS_PASSWORD']
+    # RDS_PORT = credentials['RDS_PORT']
+    # S3_ACCESS_KEY_ID = credentials['S3_ACCESS_KEY_ID']
+    # S3_ACCESS_KEY = credentials['S3_ACCESS_KEY']
+
+    bot = Scrape(product_to_search)
     aws = AWSConnect()
     
-    bot.fetch(1)
+    bot.fetch(number_of_pages)
     aws.update_database()
     aws.upload_files('raw_data/')
     
