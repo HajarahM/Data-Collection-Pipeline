@@ -276,7 +276,7 @@ After testing all public methods functionality , refactoring the bode and runnin
         RUN pip install -r requirements.txt
         CMD ["python3","main.py"]
 ```
-I then pushed the Docker image to my Dockerhub account for cloud storage.
+I then pushed the Docker image to my Dockerhub account for cloud storage and made a connection between my Github and Dockerhub to automatically update the docker image if there are any updates  of the scraper pushed to Github. 
 ##### Running Scraper on a Cloud Server using AWS EC2
 To run the scraper on a cloud server, I created an EC2 instance on my AWS account. I then pulled the docker image from dockerhub on the ECS instance and raun the scraper on the EC2 instance.
 NOTE: In order to run the scraper on the EC2 instance, you must setup your AWS credentials (Access Key ID and Key) on the EC2 instance after pulling the docker image.
