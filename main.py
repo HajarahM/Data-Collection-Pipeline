@@ -138,7 +138,7 @@ class Scrape:
         -------
         links[]: list, A list of links to each of the product pages
         """
-        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+        engine = create_engine(f"postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper")
         old_links = engine.execute('''SELECT "Link" FROM public."productsDB"''').all()
                 
         self._accept_cookies()
@@ -360,9 +360,16 @@ class AWSConnect:
         pass
 
     def update_database(self):
+        """ 
+        Description
+        -----------
+        Function that obtains data fetched from the "ikeadata.json" and deposits it into a database hosted on AWS RDS. With user input of RDS connection credentials, the functions starts
+        by comparing scraped links to existing links in the database and then only fetches links that don't already exist in the database and then saves respective data.
+        
+        """     
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
         # Retrieve existing data
-        engine = create_engine(f'postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
+        engine = create_engine(f"postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper")
         old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
         # Retrieve all new data
@@ -380,35 +387,36 @@ class AWSConnect:
         inspect(engine).get_table_names()
 
     def upload_files(self, path):
-        s3 = boto3.resource('s3',
-                aws_access_key_id={S3_ACCESS_KEY_ID},
-                aws_secret_access_key={S3_ACCESS_KEY})
+        s3 = boto3.resource('s3'
+                # ,
+                # aws_access_key_id={S3_ACCESS_KEY_ID},
+                # aws_secret_access_key={S3_ACCESS_KEY}
+                )
         bucket = s3.Bucket('ikeascraper')
     
         for subdir, dirs, files in os.walk(path):
             for file in files:
                 full_path = os.path.join(subdir, file)
                 with open(full_path, 'rb') as data:
-                    bucket.put_object(Key=full_path, Body=data)
-        
+                    bucket.put_object(Key=full_path, Body=data)    
         print('upload complete')
        
 if __name__ == "__main__":
     print('Starting the Scraper ...')
 
     #inputs to be obtained from user
-    product_to_search = input("What product do you want to search for and scrape?")
-    number_of_pages = input("how many result pages do you want to scrape?")
+    product_to_search = input("What product do you want to search for and scrape? ")
+    number_of_pages = int(input("how many result pages do you want to scrape? "))
     print('I will need to save the table of scraped product details for you in a database.')
-    RDS_HOST = input("Enter your RDS Database host here")
-    RDS_PASSWORD = input("Enter you RDS Password here")
-    RDS_PORT = input ("Enter your RDS PORT here")
+    RDS_HOST = input("Enter your RDS Database host here: ")
+    RDS_PASSWORD = input("Enter you RDS Password here: ")
+    RDS_PORT = int(input ("Enter your RDS PORT here: "))
     print('I will also need to save the product images to your s3 bucket')
-    S3_ACCESS_KEY_ID = input("Enter your S3 Access Key ID here (it will be saved locally)")
-    S3_ACCESS_KEY = input ("Enter your Access Key here")
+    # S3_ACCESS_KEY_ID = input("Enter your S3 Access Key ID here (it will be saved locally): ")
+    # S3_ACCESS_KEY = input ("Enter your Access Key here: ")
 
     #create user_input.json file
-    
+
 
     # with open ('credentials.json') as cred:
     #     credentials = json.load(cred)

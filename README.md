@@ -181,20 +181,18 @@ To scalably store the data, first in AWS console, I created an S3 bucket "ikeasc
         sample code below;
 ```python
         def upload_files(path):
-                s3 = boto3.resource('s3')
+                s3 = boto3.resource('s3',
+                        aws_access_key_id={S3_ACCESS_KEY_ID},
+                        aws_secret_access_key={S3_ACCESS_KEY})
                 bucket = s3.Bucket('ikeascraper')
-                
+    
                 for subdir, dirs, files in os.walk(path):
                         for file in files:
-                        full_path = os.path.join(subdir, file)
-                        with open(full_path, 'rb') as data:
-                                bucket.put_object(Key=full_path, Body=data)
-                
+                                full_path = os.path.join(subdir, file)
+                                with open(full_path, 'rb') as data:
+                                        bucket.put_object(Key=full_path, Body=data)
+        
                 print('upload complete')
-                
-                if __name__ == "__main__":
-                upload_files('raw_data/')
-```
         2. Upload the products database file ikeadata.json to RDS
 ```python
         from sqlalchemy import create_engine
@@ -202,7 +200,8 @@ To scalably store the data, first in AWS console, I created an S3 bucket "ikeasc
         import pandas as pd
 
         # create_engine(f"{database_type}+{db_api}://{credentials['RDS_USER']}:{credentials['RDS_PASSWORD']}@{credentials['RDS_HOST']}:{credentials['RDS_PORT']}/{credentials['RDS_DATABSE']}")
-        engine = create_engine('postgresql+psycopg2://postgres:AiCore2022!@ikeascraper.cjqxq5ckwjtu.us-east-1.rds.amazonaws.com:5432/ikeascraper')
+        engine = create_engine(f"postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper")
+        old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
         jsonfile = pd.read_json('./raw_data/ikeadata.json') #Read the json file which will return a dictionary
         productsDB = pd.DataFrame(jsonfile) #Convert that dictionary into a dataframe
@@ -214,3 +213,70 @@ To scalably store the data, first in AWS console, I created an S3 bucket "ikeasc
 
         inspect(engine).get_table_names()
 ```
+#### Milestone 7: Preventing re-scraping and getting more data
+##### Checking scalability of the scraper and checking that it runs without issues
+        I revised the scraper to make it more flexible by adding functionality for user to input the desired number of page search results. I then tested the scraper for different number of pages and it scraped the results irrespective of the number of pages specified.
+        Sample code for number of pages:
+```python        
+        def _scroll_down_showmore(self, result_pages):
+            for page in range(result_pages):
+                show_more = self.driver.find_element(by=By.XPATH, value='//a[@class="load-more-anchor"]')
+                show_more.location_once_scrolled_into_view
+                show_more_button = self.driver.find_element(by=By.XPATH, value='//a[@class="show-more__button button button--secondary button--small"]')
+                show_more_button.click()
+                time.sleep(0.5)
+```
+##### Preventing Rescraping
+        Functionality to prevent rescraping was implemented through the "get_product_links" method. With user input of RDS connection credentials, the function compares new scraped links to existing (old) links in the database and then only fetches links that don't already exist in the database and then saves respective data.
+        Sample Code here ...
+```python  
+        engine = create_engine(f"postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper")
+        old_links = engine.execute('''SELECT "Link" FROM public."productsDB"''').all()
+                
+        self._accept_cookies()
+        self.driver.get(self._search_product())
+        print("Loading all images...")               
+        self._scroll_down_showmore(number_of_pages)
+        time.sleep(7)
+        print("Fetching links...")        
+        links = []
+        product_list = self.driver.find_elements(by=By.XPATH, value='//*[@class="serp-grid__item search-grid__item product-fragment"]')
+        for item in product_list:
+            # get links
+            a_tag = item.find_element(by=By.XPATH, value='.//a')
+            link = a_tag.get_attribute('href')
+            
+            if link in old_links:
+                pass
+            else:
+                links.append(link)
+```
+#### Milestone 8: Containerising the scraper and running it on a cloud server
+##### Containerising using Docker
+After testing all public methods functionality , refactoring the bode and running the scraper in headless mode, I then moved on to containerising the scraper by creating a Docker image which runs the scraper. I created a Dockerfile to build the scraper image locally, sample code below ...
+```python  
+        #base image
+        FROM python:3.8
+        # install google chrome
+        #Adding trusting keys to apt for repositories, you can download and add them using the following command:
+        RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+        RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+        RUN apt-get -y update
+        RUN apt-get install -y google-chrome-stable
+        # install chromedriver
+        RUN apt-get install -yqq unzip
+        RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
+        RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+        # set display port to avoid crash
+        ENV DISPLAY=:99
+        COPY . .
+        # upgrade pip
+        RUN pip install --upgrade pip
+        # install dependencies
+        RUN pip install -r requirements.txt
+        CMD ["python3","main.py"]
+```
+I then pushed the Docker image to my Dockerhub account for cloud storage.
+##### Running Scraper on a Cloud Server using AWS EC2
+To run the scraper on a cloud server, I created an EC2 instance on my AWS account. I then pulled the docker image from dockerhub on the ECS instance and raun the scraper on the EC2 instance.
+NOTE: In order to run the scraper on the EC2 instance, you must setup your AWS credentials (Access Key ID and Key) on the EC2 instance after pulling the docker image.

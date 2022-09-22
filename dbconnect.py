@@ -10,7 +10,7 @@ RDS_HOST = credentials['RDS_HOST']
 RDS_PASSWORD = credentials['RDS_PASSWORD']
 RDS_PORT = credentials['RDS_PORT']
 
-engine = create_engine('postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
+engine = create_engine(f'postgresql+psycopg2://postgres:{RDS_PASSWORD}@{RDS_HOST}:{RDS_PORT}/ikeascraper')
 # old_product_info = engine.execute('''SELECT * FROM public."productsDB"''').all()
 
 # Retrieve all new data
