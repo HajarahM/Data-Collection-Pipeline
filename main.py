@@ -155,9 +155,10 @@ class Scrape:
             link = a_tag.get_attribute('href')
             
             if link in old_links:
-                pass
+                continue
             else:
-                links.append(link)
+                if link not in old_links:
+                    links.append(link)
                                 
         print(f'The top {len(links)} items of {self.productname} have been found')        
         return links
