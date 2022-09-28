@@ -280,3 +280,15 @@ I then pushed the Docker image to my Dockerhub account for cloud storage and mad
 ##### Running Scraper on a Cloud Server using AWS EC2
 To run the scraper on a cloud server, I created an EC2 instance on my AWS account. I then pulled the docker image from dockerhub on the ECS instance and raun the scraper on the EC2 instance.
 NOTE: In order to run the scraper on the EC2 instance, you must setup your AWS credentials (Access Key ID and Key) on the EC2 instance after pulling the docker image.
+
+#### Milestone 9: Monitoring and Alerting
+##### Prometheus Container to monitor the health-state of the Scraper
+On the previous created EC2 instance, I created a docker container running Prometheus and configured its promethus.yml config file. I then configured the daemon file for the Docker as well as the prometheus.yml file to monitor the metrics of the docker container.
+The following protocols were allowed on the EC2 instance: SSH (port 22) to connect to EC2 instance, HTTP (port 80) to monitor prometheus via the instance IP address.
+##### Grafana
+I installed Grafana to my local machine and connected prometheus (via instance IP address). I created a dashboard in Grafana to monitor the metrics of the containers and the hardware metrics of the EC2 instance
+#### Milestone 10: Setting up a CI/CD pipeline for Docker image
+I set up the relevant GitHub secrets (on GitHub) that contains the credentials required to push to the Dockerhub account.
+I then created a GitHub action (workflow) to build the docker image and push it to Dockerhub account everytime a Git push action takes place (trigggered on a "push" to the "main" branch of the repository).
+##### Cronjobs
+To automate routine scraping for new products, I created a cronjob to restart the scraper every day. It's setup to stop and kill the container, and pull the latest image from my Dockerhub account.
